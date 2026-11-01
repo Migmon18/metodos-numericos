@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Versión maskable: fondo a sangre y contenido dentro de la zona segura -->
+  <rect width="512" height="512" fill="#004EAA"/>
+
+  <g transform="translate(256 256) scale(0.72) translate(-256 -256)">
+    <line x1="78" y1="344" x2="436" y2="344" stroke="#ffffff" stroke-opacity="0.45"
+          stroke-width="10" stroke-linecap="round"/>
+    <path d="M 88 424 C 168 424, 196 376, 266 344 C 330 316, 352 268, 424 236"
+          fill="none" stroke="#ffffff" stroke-width="28"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="266" cy="344" r="26" fill="#ffffff"/>
+    <circle cx="266" cy="344" r="14" fill="#78BF26"/>
+  </g>
+</svg>

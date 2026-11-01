@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Métodos Numéricos · Raíces de ecuaciones</title>
+  <meta name="description" content="Resuelve ecuaciones no lineales por bisección, regula falsi y Newton-Raphson, con tabla de iteraciones y gráfica.">
+  <meta name="theme-color" content="#004EAA">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="inner">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="assets/utem-blanco.png">
+        <img class="logo" src="assets/utem-color.png" width="937" height="330"
+             alt="Universidad Tecnológica Metropolitana del Estado de Chile">
+      </picture>
+      <h1>Métodos Numéricos</h1>
+      <p class="subtitle">Raíces de ecuaciones no lineales</p>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Función -->
+    <section class="card" aria-labelledby="t-funcion">
+      <h2 id="t-funcion"><span class="step">1</span> La ecuación</h2>
+
+      <div class="field">
+        <label for="funcion">f(x) =</label>
+        <input id="funcion" name="funcion" type="text" inputmode="text" autocomplete="off"
+               spellcheck="false" value="x^3 - 2x - 5" aria-describedby="sintaxis">
+      </div>
+      <p id="sintaxis" class="hint">
+        Usa <code>+ − * / ^</code>, paréntesis, la variable <code>x</code> y funciones como
+        <code>sin</code>, <code>cos</code>, <code>exp</code>, <code>ln</code>, <code>sqrt</code>.
+        Se admite <code>2x</code> y <code>pi</code>.
+      </p>
+
+      <div class="chips" role="group" aria-label="Ejemplos">
+        <button type="button" class="chip" data-ejemplo="x^3 - 2x - 5" data-a="2" data-b="3" data-x0="2.5">x³ − 2x − 5</button>
+        <button type="button" class="chip" data-ejemplo="cos(x) - x" data-a="0" data-b="1" data-x0="0.5">cos x − x</button>
+        <button type="button" class="chip" data-ejemplo="x^2 - 2" data-a="0" data-b="2" data-x0="1.5">x² − 2</button>
+        <button type="button" class="chip" data-ejemplo="exp(-x) - x" data-a="0" data-b="1" data-x0="0.5">e⁻ˣ − x</button>
+        <button type="button" class="chip" data-ejemplo="x*ln(x) - 1" data-a="1" data-b="3" data-x0="2">x·ln x − 1</button>
+      </div>
+    </section>
+
+    <!-- 2. Datos -->
+    <section class="card" aria-labelledby="t-datos">
+      <h2 id="t-datos"><span class="step">2</span> Los datos</h2>
+
+      <div class="grid">
+        <div class="field">
+          <label for="a">Extremo a</label>
+          <input id="a" name="a" type="text" inputmode="decimal" value="2" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="b">Extremo b</label>
+          <input id="b" name="b" type="text" inputmode="decimal" value="3" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="x0">Valor inicial x₀</label>
+          <input id="x0" name="x0" type="text" inputmode="decimal" value="2.5" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="tol">Tolerancia</label>
+          <input id="tol" name="tol" type="text" inputmode="decimal" value="1e-8" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="maxiter">Máx. iteraciones</label>
+          <input id="maxiter" name="maxiter" type="number" min="1" max="500" step="1" value="100">
+        </div>
+        <div class="field">
+          <label for="derivada">f′(x) <span class="optional">(opcional)</span></label>
+          <input id="derivada" name="derivada" type="text" inputmode="text" autocomplete="off"
+                 spellcheck="false" placeholder="se calcula numéricamente">
+        </div>
+      </div>
+
+      <fieldset class="metodos">
+        <legend>Métodos a aplicar</legend>
+        <label class="toggle">
+          <input type="checkbox" name="metodo" value="biseccion" checked>
+          <span>Bisección</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" name="metodo" value="regula" checked>
+          <span>Regula falsi</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" name="metodo" value="newton" checked>
+          <span>Newton-Raphson</span>
+        </label>
+      </fieldset>
+
+      <button id="resolver" class="primary" type="button">Resolver</button>
+      <div id="mensajes" class="mensajes" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- 3. Resultados -->
+    <section id="resultados" class="resultados" hidden aria-labelledby="t-resultados">
+      <h2 id="t-resultados" class="sr-only">Resultados</h2>
+
+      <div id="resumen" class="resumen"></div>
+
+      <div class="card">
+        <div class="tabs" role="tablist" aria-label="Iteraciones por método" id="tabs"></div>
+        <div id="tabla-detalle" class="tabla-wrap" role="tabpanel" tabindex="0"></div>
+        <p class="hint" id="nota-detalle"></p>
+      </div>
+
+      <div class="card">
+        <h3 id="t-grafica">Gráfica</h3>
+        <div class="chart-wrap">
+          <canvas id="grafica" aria-label="Gráfica de la función con la raíz encontrada" role="img"></canvas>
+        </div>
+        <p class="hint">La línea vertical discontinua marca la raíz hallada. Desliza la tabla para ver todas las columnas.</p>
+      </div>
+
+      <div class="acciones">
+        <button id="exportar" class="secondary" type="button">Descargar iteraciones (CSV)</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Funciona sin conexión · Instálala desde el menú del navegador («Añadir a pantalla de inicio»).</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# El service worker debe revalidarse siempre para que las actualizaciones lleguen
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json

@@ -1,0 +1,411 @@
+/* styles.css — Métodos Numéricos
+   Diseño móvil primero, modo claro y oscuro, sin dependencias externas. */
+
+:root {
+  --bg: #eef1f7;
+  --card: #ffffff;
+  --ink: #0f172a;
+  --muted: #5b6b83;
+  --line: #dde3ee;
+  --accent: #004eaa;        /* azul institucional UTEM */
+  --accent-soft: #e7eef9;
+  --verde: #78bf26;         /* verde institucional UTEM */
+  --ok: #4a7c11;
+  --ok-soft: #ecf6df;
+  --warn: #96530b;
+  --warn-soft: #fdf1de;
+  --err: #b42318;
+  --err-soft: #fee4e2;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgb(15 23 42 / 6%), 0 8px 24px -12px rgb(15 23 42 / 18%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --card: #131c2e;
+    --ink: #e8eefc;
+    --muted: #9aabc4;
+    --line: #24314a;
+    --accent: #6fa3ea;
+    --accent-soft: #14243d;
+    --verde: #8ed14a;
+    --ok: #a2d968;
+    --ok-soft: #1c2f14;
+    --warn: #f0b365;
+    --warn-soft: #3a2a12;
+    --err: #ff9b90;
+    --err-soft: #3d1a17;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 10px 30px -14px rgb(0 0 0 / 70%);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 0 0 env(safe-area-inset-bottom);
+}
+
+h1, h2, h3 { margin: 0; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: 1.25rem; font-weight: 700; }
+h2 { font-size: 1.02rem; font-weight: 650; margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
+h3 { font-size: 0.98rem; font-weight: 650; margin-bottom: 10px; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------------------------------------------------------------- cabecera */
+
+/* Cabecera: identificador institucional a la izquierda y, debajo, el nombre
+   de la aplicación. Los colores siguen la paleta de la guía de identidad. */
+.app-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 18px 15px;
+}
+
+.app-header .inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.app-header .logo {
+  display: block;
+  height: clamp(38px, 9.5vw, 52px);
+  width: auto;
+}
+
+.app-header h1 {
+  margin: 12px 0 0;
+  font-size: clamp(1.2rem, 4.8vw, 1.45rem);
+  color: var(--accent);
+}
+
+.subtitle { margin: 2px 0 0; color: var(--muted); font-size: 0.84rem; }
+
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 18px 18px 40px;
+  display: grid;
+  gap: 16px;
+}
+
+/* Las tarjetas dentro de la rejilla deben poder encogerse: si no, una tabla
+   ancha (aunque tenga scroll propio) estira todo el documento. */
+main > * { min-width: 0; }
+
+/* ----------------------------------------------------------------- tarjetas */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 16px 16px;
+}
+
+.step {
+  flex: none;
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ campos */
+
+.field { display: grid; gap: 6px; }
+.field label { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+.optional { font-weight: 400; text-transform: none; }
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  font: inherit;
+  font-size: 16px; /* evita el zoom automático en iOS */
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 12px;
+  min-height: 46px;
+}
+input[type="text"]:focus-visible,
+input[type="number"]:focus-visible,
+button:focus-visible {
+  outline: 2.5px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#funcion { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 1.02rem; }
+
+.hint { color: var(--muted); font-size: 0.8rem; margin: 8px 0 0; }
+.hint code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  background: var(--accent-soft);
+  color: var(--ink);
+  padding: 1px 5px;
+  border-radius: 5px;
+  font-size: 0.92em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.grid .field:last-child { grid-column: 1 / -1; }
+
+/* ------------------------------------------------------------------ fichas */
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+.chip {
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease;
+}
+.chip:hover { border-color: var(--accent); }
+.chip:active { transform: scale(.97); }
+
+/* ---------------------------------------------------------------- métodos */
+
+.metodos {
+  border: 0;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.metodos legend {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0;
+  margin-bottom: 8px;
+  float: left;
+  width: 100%;
+}
+
+.toggle { position: relative; cursor: pointer; }
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 100%; height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.toggle span {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 550;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 15px;
+  transition: all .15s ease;
+}
+.toggle input:checked + span {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.toggle input:focus-visible + span { outline: 2.5px solid var(--accent); outline-offset: 2px; }
+
+/* ----------------------------------------------------------------- botones */
+
+button.primary, button.secondary {
+  font: inherit;
+  font-weight: 650;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease;
+}
+button.primary {
+  width: 100%;
+  min-height: 52px;
+  font-size: 1rem;
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 6px 18px -10px var(--accent);
+}
+button.secondary {
+  min-height: 46px;
+  padding: 0 18px;
+  color: var(--accent);
+  background: var(--card);
+  border-color: var(--line);
+}
+button.primary:active, button.secondary:active { transform: translateY(1px); }
+button:disabled { opacity: .55; cursor: progress; }
+
+/* ---------------------------------------------------------------- mensajes */
+
+.mensajes:empty { display: none; }
+.mensajes {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  background: var(--err-soft);
+  color: var(--err);
+  border: 1px solid color-mix(in oklab, var(--err) 30%, transparent);
+}
+.mensajes.info {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-color: color-mix(in oklab, var(--warn) 30%, transparent);
+}
+
+/* --------------------------------------------------------------- resultados */
+
+.resultados { display: grid; gap: 16px; }
+
+/* Toda la cadena de rejillas debe poder encogerse; si no, el contenido ancho
+   (tablas, cifras largas) estira la página y aparece desplazamiento lateral. */
+.resultados, .resumen, .metodo-card, .card { min-width: 0; }
+
+.resumen { display: grid; gap: 10px; }
+
+.metodo-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 13px 15px;
+  box-shadow: var(--shadow);
+}
+.metodo-card h3 { font-size: 0.86rem; margin: 0; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.metodo-card .raiz {
+  grid-column: 1 / -1;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: clamp(1.02rem, 4vw, 1.22rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+.metodo-card .meta { grid-column: 1 / -1; color: var(--muted); font-size: 0.78rem; }
+.metodo-card.ok { border-left-color: var(--ok); }
+.metodo-card.fallo { border-left-color: var(--warn); }
+
+.pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.fallo { background: var(--warn-soft); color: var(--warn); }
+
+/* -------------------------------------------------------------------- tabs */
+
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin; }
+.tabs button {
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+.tabs button[aria-selected="true"] {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------- tabla */
+
+.tabla-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; position: relative; }
+
+/* Pista visual de que la tabla continúa a la derecha (se quita al llegar al final) */
+.tabla-wrap.desborda {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 30px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 30px), transparent);
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+th, td { padding: 7px 9px; text-align: right; white-space: nowrap; }
+th {
+  position: sticky; top: 0;
+  background: var(--card);
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--line);
+}
+td { border-bottom: 1px solid color-mix(in oklab, var(--line) 65%, transparent); font-variant-numeric: tabular-nums; }
+td:first-child, th:first-child { text-align: left; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr.final { background: var(--ok-soft); font-weight: 600; }
+
+/* ------------------------------------------------------------------ gráfica */
+
+.chart-wrap { position: relative; width: 100%; aspect-ratio: 4 / 3; }
+canvas { width: 100%; height: 100%; display: block; border-radius: 10px; }
+
+.acciones { display: flex; justify-content: flex-end; }
+
+/* -------------------------------------------------------------------- pie */
+
+.app-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 18px 32px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+@media (min-width: 620px) {
+  .resumen { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .app-header { padding-top: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* En pantallas estrechas se ocultan las columnas menos importantes de la tabla
+   (el extremo b y la derivada) para que quepan las cifras relevantes. */
+@media (max-width: 560px) {
+  /* b y f′ son prescindibles; xₙ₊₁ repite la xₙ de la fila siguiente */
+  .tabla-wrap [data-campo="a"],
+  .tabla-wrap [data-campo="b"],
+  .tabla-wrap [data-campo="dfx"],
+  .tabla-wrap [data-campo="xNew"] { display: none; }
+  table { font-size: 0.76rem; }
+  th, td { padding: 5px 7px; }
+}
