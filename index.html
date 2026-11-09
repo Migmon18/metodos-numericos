@@ -265,8 +265,55 @@
   </main>
 
   <footer class="app-footer">
-    <p>Funciona sin conexión · Instálala desde el menú del navegador («Añadir a pantalla de inicio»).</p>
+    <p>
+      Funciona sin conexión ·
+      <button type="button" id="instalar-ayuda-btn" class="enlace-boton">¿Cómo instalar la app?</button>
+    </p>
   </footer>
+
+  <div id="instalar-aviso" class="instalar-aviso" hidden role="region" aria-label="Instalar aplicación">
+    <div class="instalar-texto">
+      <strong>Instala la app</strong>
+      <span>Ábrela desde el icono y úsala sin conexión.</span>
+    </div>
+    <div class="instalar-acciones">
+      <button type="button" id="instalar-btn" class="secondary">Instalar</button>
+      <button type="button" id="instalar-cerrar" class="instalar-cerrar" aria-label="Ahora no">×</button>
+    </div>
+  </div>
+
+  <dialog id="instalar-ayuda" class="dialogo" aria-labelledby="t-instalar">
+    <form method="dialog" class="dialogo-cerrar-form">
+      <button type="submit" class="dialogo-cerrar" aria-label="Cerrar">×</button>
+    </form>
+    <h2 id="t-instalar">Instalar la app</h2>
+    <p class="hint">
+      Primero ábrela con conexión y espera a que cargue. Después funcionará sin internet.
+    </p>
+
+    <h3>Android (Chrome)</h3>
+    <ol>
+      <li>Abre <strong>https://migmon18.github.io/metodos-numericos/</strong> en Chrome.</li>
+      <li>Toca el menú ⋮ y elige <strong>Instalar aplicación</strong> o
+          <strong>Añadir a pantalla de inicio</strong>.</li>
+      <li>Si el enlace se abrió dentro de Google, Lens o una pestaña incrustada,
+          toca ⋮ → <strong>Abrir en Chrome</strong>.</li>
+      <li>Si no aparece la opción, actualiza Chrome y vuelve a abrir la URL.</li>
+    </ol>
+
+    <h3>iPhone / iPad (Safari)</h3>
+    <ol>
+      <li>Abre la URL en Safari.</li>
+      <li>Toca <strong>Compartir</strong> y elige <strong>Añadir a pantalla de inicio</strong>.</li>
+      <li>Ábrela desde el icono una vez con conexión.</li>
+    </ol>
+
+    <h3>Computador</h3>
+    <ol>
+      <li>En Chrome o Edge, usa el icono de instalar de la barra de direcciones
+          o el menú → <strong>Instalar aplicación</strong>.</li>
+    </ol>
+  </dialog>
 
   <script type="module" src="app.js"></script>
 </body>

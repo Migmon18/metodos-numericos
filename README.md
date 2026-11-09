@@ -65,6 +65,9 @@ los navegadores; con el servidor también se activa el service worker.
 - Para tenerla instalada de verdad: súbela a un alojamiento estático con HTTPS
   (GitHub Pages, Netlify, Cloudflare Pages). En Chrome aparecerá «Instalar
   aplicación».
+- La app muestra un aviso **Instalar** cuando el navegador ofrece la
+  instalación. Si no aparece, el pie tiene **«¿Cómo instalar la app?»** con los
+  pasos para Android, iPhone/iPad y computador.
 
 Los pasos concretos están en **[DESPLIEGUE.md](DESPLIEGUE.md)**.
 

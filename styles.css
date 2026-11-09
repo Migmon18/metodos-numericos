@@ -554,6 +554,75 @@ table.matriz td {
   text-align: center;
 }
 
+.enlace-boton {
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Aviso de instalación: solo aparece cuando el navegador ofrece el prompt. */
+.instalar-aviso {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 732px;
+  margin: 0 auto;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.instalar-texto { display: grid; gap: 1px; font-size: 0.82rem; color: var(--muted); }
+.instalar-texto strong { font-size: 0.9rem; color: var(--ink); }
+.instalar-acciones { display: flex; align-items: center; gap: 8px; }
+.instalar-aviso .secondary { min-height: 40px; padding: 0 15px; }
+.instalar-cerrar,
+.dialogo-cerrar {
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+/* Diálogo de ayuda para instalar. */
+.dialogo {
+  width: min(560px, calc(100% - 32px));
+  max-height: min(86vh, 720px);
+  overflow: auto;
+  margin: auto;
+  padding: 20px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.dialogo::backdrop { background: rgb(15 23 42 / 55%); }
+.dialogo h2 { margin-bottom: 6px; }
+.dialogo h3 { margin-top: 14px; }
+.dialogo ol { margin: 4px 0 0; padding-left: 1.3em; font-size: 0.88rem; }
+.dialogo li { margin-bottom: 4px; }
+.dialogo-cerrar-form { margin: -10px -8px 0 0; text-align: right; }
+.dialogo-cerrar { font-size: 1.4rem; }
+
 @media (min-width: 620px) {
   .resumen { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
   .app-header { padding-top: 22px; }

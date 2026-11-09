@@ -58,6 +58,72 @@ window.addEventListener("hashchange", () => mostrar(vistaPedida(), { actualizarU
 // solo cuando pide explícitamente el módulo de sistemas.
 mostrar(vistaPedida(), { actualizarUrl: false });
 
+/* --------------------------------------------------------- instalar PWA */
+
+const avisoInstalar = $("#instalar-aviso");
+const botonInstalar = $("#instalar-btn");
+const botonCerrar = $("#instalar-cerrar");
+const botonAyuda = $("#instalar-ayuda-btn");
+const dialogoAyuda = $("#instalar-ayuda");
+let promptInstalar = null;
+
+function estaInstalada() {
+  return Boolean(
+    window.matchMedia?.("(display-mode: standalone)")?.matches ||
+    window.navigator.standalone === true,
+  );
+}
+
+function abrirAyudaInstalar() {
+  if (!dialogoAyuda) return;
+  if (typeof dialogoAyuda.showModal === "function") {
+    if (!dialogoAyuda.open) dialogoAyuda.showModal();
+  } else {
+    dialogoAyuda.setAttribute("open", "");
+  }
+}
+
+window.addEventListener("beforeinstallprompt", (evento) => {
+  if (estaInstalada()) return;
+  evento.preventDefault();
+  promptInstalar = evento;
+  avisoInstalar.hidden = false;
+});
+
+botonInstalar?.addEventListener("click", async () => {
+  if (!promptInstalar) {
+    abrirAyudaInstalar();
+    return;
+  }
+  promptInstalar.prompt();
+  try {
+    await promptInstalar.userChoice;
+  } catch {
+    // Si el navegador cancela el diálogo, no hay nada más que hacer.
+  }
+  promptInstalar = null;
+  avisoInstalar.hidden = true;
+});
+
+botonCerrar?.addEventListener("click", () => {
+  avisoInstalar.hidden = true;
+});
+
+botonAyuda?.addEventListener("click", abrirAyudaInstalar);
+
+window.addEventListener("appinstalled", () => {
+  promptInstalar = null;
+  avisoInstalar.hidden = true;
+});
+
+if (dialogoAyuda) {
+  dialogoAyuda.addEventListener("click", (evento) => {
+    if (evento.target !== dialogoAyuda) return;
+    if (typeof dialogoAyuda.close === "function") dialogoAyuda.close();
+    else dialogoAyuda.removeAttribute("open");
+  });
+}
+
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {});
