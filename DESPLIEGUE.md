@@ -4,18 +4,22 @@ Objetivo: una dirección del tipo `https://algo.netlify.app` que funcione desde
 cualquier sitio, sin depender de tu ordenador, y que active el modo sin conexión
 y la instalación en el móvil.
 
-Ya está comprobado que la app funciona servida en un subdirectorio
+La app ya está publicada en:
+
+- Repositorio: <https://github.com/Migmon18/metodos-numericos>
+- Sitio: <https://migmon18.github.io/metodos-numericos/>
+
+Ya está comprobado que funciona servida en un subdirectorio
 (`/metodos-numericos/`), que es el caso de GitHub Pages, y que el service worker
 queda bien delimitado a ese ámbito.
 
 ## Qué subir
 
-La carpeta `metodos-numericos` **tal cual**, o el archivo
-`metodos-numericos-sitio.zip` (ya preparado, con `index.html` en la raíz).
+En este repositorio, **la raíz es la aplicación**, con `index.html` en la raíz.
 
-Contiene: `index.html`, `styles.css`, `app.js`, `core.js`,
-`manifest.webmanifest`, `sw.js`, `assets/` (iconos), `_headers`, `.nojekyll`.
-No necesita compilación, ni Node, ni backend.
+Contiene: `index.html`, `styles.css`, `app.js`, `raices.js`, `sistemas.js`,
+`core.js`, `linear.js`, `manifest.webmanifest`, `sw.js`, `assets/` (iconos),
+`_headers`, `.nojekyll`. No necesita compilación, ni Node, ni backend.
 
 ---
 
@@ -36,28 +40,26 @@ Para actualizarla: pestaña *Deploys* → arrastra de nuevo la carpeta.
 2. Arrastra la carpeta o el zip y ponle un nombre al proyecto.
 3. URL resultante: `https://nombre.pages.dev`.
 
-## Opción 3 — GitHub Pages (si ya usas Git)
+## Opción 3 — GitHub Pages (repositorio del curso)
+
+Repositorio: <https://github.com/Migmon18/metodos-numericos>
+
+Para actualizar la app:
 
 ```bash
+git clone https://github.com/Migmon18/metodos-numericos.git
 cd metodos-numericos
-git init -b main
+# copiar aquí los archivos nuevos
 git add .
-git commit -m "Aplicación de métodos numéricos"
-```
-
-Crea un repositorio **vacío y público** en <https://github.com/new> llamado
-`metodos-numericos`, y luego:
-
-```bash
-git remote add origin https://github.com/TU-USUARIO/metodos-numericos.git
-git push -u origin main
+git commit -m "Añade Jacobi y Gauss-Seidel"
+git push origin main
 ```
 
 En el repositorio: **Settings → Pages → Source: Deploy from a branch →
 main / (root) → Save**. En un minuto estará en:
 
 ```
-https://TU-USUARIO.github.io/metodos-numericos/
+https://migmon18.github.io/metodos-numericos/
 ```
 
 El archivo `.nojekyll` ya incluido evita que GitHub procese los ficheros con
@@ -74,7 +76,7 @@ Jekyll.
 4. Comprueba un enlace de ejercicio ya cargado:
 
    ```
-   https://TU-DIRECCION/?f=cos(x)-x&a=0&b=1&x0=0.5&run=1
+   https://migmon18.github.io/metodos-numericos/?f=cos(x)-x&a=0&b=1&x0=0.5&run=1
    ```
 
 ## Compartir con el alumnado
@@ -87,5 +89,14 @@ Jekyll.
 ## Actualizar la app más adelante
 
 Sube de nuevo la carpeta. Al cambiar `sw.js`, la versión de caché
-(`VERSION = "metodos-vN"`) debe incrementarse para que los alumnos reciban la
-nueva versión en lugar de la guardada.
+(`VERSION = "metodos-vN"`, actualmente `metodos-v7`) debe incrementarse para que
+los alumnos reciban la nueva versión en lugar de la guardada.
+
+## Enlaces directos a cada módulo
+
+- Raíces: `https://migmon18.github.io/metodos-numericos/`
+- Sistemas lineales: `https://migmon18.github.io/metodos-numericos/#sistemas`
+- Ejemplo de sistema ya cargado:
+  `https://migmon18.github.io/metodos-numericos/?sistema=tridiagonal&run=1`
+- Un sistema concreto:
+  `https://migmon18.github.io/metodos-numericos/?A=4,-1,0,0;-1,4,-1,0;0,-1,4,-1;0,0,-1,4&b=1,1,1,1&tol=0.1&run=1`

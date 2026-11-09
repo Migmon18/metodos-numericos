@@ -1,11 +1,21 @@
 {
-  "name": "Métodos Numéricos — Raíces de ecuaciones",
+  "name": "Métodos Numéricos — Raíces y sistemas lineales",
   "short_name": "Métodos",
-  "description": "Resuelve ecuaciones no lineales por bisección, regula falsi y Newton-Raphson, con tabla de iteraciones y gráfica.",
+  "description": "Resuelve ecuaciones no lineales por bisección, regula falsi y Newton-Raphson, y sistemas lineales por Jacobi y Gauss-Seidel, con tablas de iteraciones y gráficas.",
   "lang": "es",
   "dir": "ltr",
   "start_url": "./index.html",
   "scope": "./",
+  "shortcuts": [
+    {
+      "name": "Raíces de ecuaciones",
+      "url": "./index.html#raices"
+    },
+    {
+      "name": "Sistemas lineales",
+      "url": "./index.html#sistemas"
+    }
+  ],
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f2f5fa",

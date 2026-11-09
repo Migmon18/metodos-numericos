@@ -42,6 +42,9 @@
 
 * { box-sizing: border-box; }
 
+/* El atributo hidden debe ganar a cualquier display de una regla de autor. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -93,6 +96,34 @@ h3 { font-size: 0.98rem; font-weight: 650; margin-bottom: 10px; }
 
 .subtitle { margin: 2px 0 0; color: var(--muted); font-size: 0.84rem; }
 
+/* Selector de módulo: raíces de ecuaciones o sistemas lineales. */
+.modos {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+.modo {
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 650;
+  white-space: nowrap;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+.modo[aria-selected="true"] {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.modo:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; }
+
 main {
   max-width: 760px;
   margin: 0 auto;
@@ -104,6 +135,10 @@ main {
 /* Las tarjetas dentro de la rejilla deben poder encogerse: si no, una tabla
    ancha (aunque tenga scroll propio) estira todo el documento. */
 main > * { min-width: 0; }
+
+.vista { display: grid; gap: 16px; min-width: 0; }
+.vista[hidden] { display: none; }
+.vista > * { min-width: 0; }
 
 /* ----------------------------------------------------------------- tarjetas */
 
@@ -132,7 +167,7 @@ main > * { min-width: 0; }
 .field label { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
 .optional { font-weight: 400; text-transform: none; }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], textarea, select {
   width: 100%;
   font: inherit;
   font-size: 16px; /* evita el zoom automático en iOS */
@@ -143,14 +178,23 @@ input[type="text"], input[type="number"] {
   padding: 11px 12px;
   min-height: 46px;
 }
+textarea {
+  min-height: 112px;
+  resize: vertical;
+  line-height: 1.55;
+}
+select { cursor: pointer; }
 input[type="text"]:focus-visible,
 input[type="number"]:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
 button:focus-visible {
   outline: 2.5px solid var(--accent);
   outline-offset: 2px;
 }
 
-#funcion { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 1.02rem; }
+#funcion,
+#sis-matriz { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 1.02rem; }
 
 .hint { color: var(--muted); font-size: 0.8rem; margin: 8px 0 0; }
 .hint code {
@@ -169,6 +213,8 @@ button:focus-visible {
   margin-bottom: 16px;
 }
 .grid .field:last-child { grid-column: 1 / -1; }
+.grid.sistema { margin-top: 14px; }
+.grid.sistema .field:last-child { grid-column: auto; }
 
 /* ------------------------------------------------------------------ fichas */
 
@@ -378,6 +424,125 @@ canvas { width: 100%; height: 100%; display: block; border-radius: 10px; }
 
 .acciones { display: flex; justify-content: flex-end; }
 
+/* --------------------------------------------------------- sistemas lineales */
+
+.metodo-card .solucion {
+  grid-column: 1 / -1;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: clamp(0.92rem, 3.4vw, 1.08rem);
+  font-weight: 650;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.diagnostico { display: grid; gap: 12px; }
+.diagnostico-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.diagnostico-cabecera p { margin: 0; font-size: 0.85rem; }
+
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.no { background: var(--warn-soft); color: var(--warn); }
+
+.tabla-diagnostico { font-size: 0.78rem; }
+.tabla-diagnostico th, .tabla-diagnostico td { padding: 5px 7px; }
+.tabla-diagnostico .si { color: var(--ok); font-weight: 700; }
+.tabla-diagnostico .no { color: var(--err); font-weight: 700; }
+
+.aviso-sistema {
+  margin: 0;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 0.83rem;
+  background: var(--warn-soft);
+  color: var(--warn);
+  border: 1px solid color-mix(in oklab, var(--warn) 28%, transparent);
+}
+.aviso-sistema.info {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+details.matrices {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 2px;
+}
+details.matrices summary {
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 650;
+  color: var(--accent);
+}
+.bloques-matrices { display: grid; gap: 12px; margin-top: 12px; }
+.bloque-matriz {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 12px;
+  min-width: 0;
+}
+.bloque-matriz h4 { margin: 0 0 6px; font-size: 0.86rem; }
+.formula { margin: 4px 0; color: var(--muted); font-size: 0.77rem; }
+.formula code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  background: var(--accent-soft);
+  color: var(--ink);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+.fila-matriz {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 7px 0;
+}
+.etiqueta-matriz {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-weight: 650;
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+table.matriz {
+  width: auto;
+  border-collapse: collapse;
+  border-left: 2px solid var(--muted);
+  border-right: 2px solid var(--muted);
+  font-size: 0.76rem;
+}
+table.matriz td {
+  border: 0;
+  padding: 2px 7px;
+  text-align: right;
+  white-space: nowrap;
+}
+.rho { margin: 6px 0 0; font-size: 0.8rem; color: var(--muted); }
+.rho strong { color: var(--ink); }
+
+.leyenda {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+.leyenda i { width: 18px; height: 3px; border-radius: 2px; display: inline-block; }
+
 /* -------------------------------------------------------------------- pie */
 
 .app-footer {
@@ -405,7 +570,9 @@ canvas { width: 100%; height: 100%; display: block; border-radius: 10px; }
   .tabla-wrap [data-campo="a"],
   .tabla-wrap [data-campo="b"],
   .tabla-wrap [data-campo="dfx"],
-  .tabla-wrap [data-campo="xNew"] { display: none; }
+  .tabla-wrap [data-campo="xNew"],
+  .tabla-wrap [data-campo="relative"] { display: none; }
   table { font-size: 0.76rem; }
   th, td { padding: 5px 7px; }
+  .grid.sistema { grid-template-columns: 1fr; }
 }

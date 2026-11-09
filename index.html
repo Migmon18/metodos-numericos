@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Métodos Numéricos · Raíces de ecuaciones</title>
-  <meta name="description" content="Resuelve ecuaciones no lineales por bisección, regula falsi y Newton-Raphson, con tabla de iteraciones y gráfica.">
+  <title>Métodos Numéricos · Raíces y sistemas lineales</title>
+  <meta name="description" content="Resuelve ecuaciones no lineales por bisección, regula falsi y Newton-Raphson, y sistemas lineales por Jacobi y Gauss-Seidel, con tablas de iteraciones y gráficas.">
   <meta name="theme-color" content="#004EAA">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
@@ -20,110 +20,247 @@
              alt="Universidad Tecnológica Metropolitana del Estado de Chile">
       </picture>
       <h1>Métodos Numéricos</h1>
-      <p class="subtitle">Raíces de ecuaciones no lineales</p>
+      <p class="subtitle">Raíces de ecuaciones y sistemas lineales</p>
+
+      <nav class="modos" role="tablist" aria-label="Módulos">
+        <button type="button" class="modo" role="tab" id="tab-raices"
+                data-vista="raices" aria-selected="true" aria-controls="vista-raices">
+          Raíces de ecuaciones
+        </button>
+        <button type="button" class="modo" role="tab" id="tab-sistemas"
+                data-vista="sistemas" aria-selected="false" aria-controls="vista-sistemas">
+          Sistemas lineales
+        </button>
+      </nav>
     </div>
   </header>
 
   <main>
-    <!-- 1. Función -->
-    <section class="card" aria-labelledby="t-funcion">
-      <h2 id="t-funcion"><span class="step">1</span> La ecuación</h2>
+    <!-- ======================================================== RAÍCES ==== -->
+    <section id="vista-raices" class="vista" role="tabpanel" aria-labelledby="tab-raices">
+      <!-- 1. Función -->
+      <section class="card" aria-labelledby="t-funcion">
+        <h2 id="t-funcion"><span class="step">1</span> La ecuación</h2>
 
-      <div class="field">
-        <label for="funcion">f(x) =</label>
-        <input id="funcion" name="funcion" type="text" inputmode="text" autocomplete="off"
-               spellcheck="false" value="x^3 - 2x - 5" aria-describedby="sintaxis">
-      </div>
-      <p id="sintaxis" class="hint">
-        Usa <code>+ − * / ^</code>, paréntesis, la variable <code>x</code> y funciones como
-        <code>sin</code>, <code>cos</code>, <code>exp</code>, <code>ln</code>, <code>sqrt</code>.
-        Se admite <code>2x</code> y <code>pi</code>.
-      </p>
+        <div class="field">
+          <label for="funcion">f(x) =</label>
+          <input id="funcion" name="funcion" type="text" inputmode="text" autocomplete="off"
+                 spellcheck="false" value="x^3 - 2x - 5" aria-describedby="sintaxis">
+        </div>
+        <p id="sintaxis" class="hint">
+          Usa <code>+ − * / ^</code>, paréntesis, la variable <code>x</code> y funciones como
+          <code>sin</code>, <code>cos</code>, <code>exp</code>, <code>ln</code>, <code>sqrt</code>.
+          Se admite <code>2x</code> y <code>pi</code>.
+        </p>
 
-      <div class="chips" role="group" aria-label="Ejemplos">
-        <button type="button" class="chip" data-ejemplo="x^3 - 2x - 5" data-a="2" data-b="3" data-x0="2.5">x³ − 2x − 5</button>
-        <button type="button" class="chip" data-ejemplo="cos(x) - x" data-a="0" data-b="1" data-x0="0.5">cos x − x</button>
-        <button type="button" class="chip" data-ejemplo="x^2 - 2" data-a="0" data-b="2" data-x0="1.5">x² − 2</button>
-        <button type="button" class="chip" data-ejemplo="exp(-x) - x" data-a="0" data-b="1" data-x0="0.5">e⁻ˣ − x</button>
-        <button type="button" class="chip" data-ejemplo="x*ln(x) - 1" data-a="1" data-b="3" data-x0="2">x·ln x − 1</button>
-      </div>
+        <div class="chips" role="group" aria-label="Ejemplos">
+          <button type="button" class="chip" data-ejemplo="x^3 - 2x - 5" data-a="2" data-b="3" data-x0="2.5">x³ − 2x − 5</button>
+          <button type="button" class="chip" data-ejemplo="cos(x) - x" data-a="0" data-b="1" data-x0="0.5">cos x − x</button>
+          <button type="button" class="chip" data-ejemplo="x^2 - 2" data-a="0" data-b="2" data-x0="1.5">x² − 2</button>
+          <button type="button" class="chip" data-ejemplo="exp(-x) - x" data-a="0" data-b="1" data-x0="0.5">e⁻ˣ − x</button>
+          <button type="button" class="chip" data-ejemplo="x*ln(x) - 1" data-a="1" data-b="3" data-x0="2">x·ln x − 1</button>
+        </div>
+      </section>
+
+      <!-- 2. Datos -->
+      <section class="card" aria-labelledby="t-datos">
+        <h2 id="t-datos"><span class="step">2</span> Los datos</h2>
+
+        <div class="grid">
+          <div class="field">
+            <label for="a">Extremo a</label>
+            <input id="a" name="a" type="text" inputmode="decimal" value="2" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="b">Extremo b</label>
+            <input id="b" name="b" type="text" inputmode="decimal" value="3" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="x0">Valor inicial x₀</label>
+            <input id="x0" name="x0" type="text" inputmode="decimal" value="2.5" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="tol">Tolerancia</label>
+            <input id="tol" name="tol" type="text" inputmode="decimal" value="1e-8" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="maxiter">Máx. iteraciones</label>
+            <input id="maxiter" name="maxiter" type="number" min="1" max="500" step="1" value="100">
+          </div>
+          <div class="field">
+            <label for="derivada">f′(x) <span class="optional">(opcional)</span></label>
+            <input id="derivada" name="derivada" type="text" inputmode="text" autocomplete="off"
+                   spellcheck="false" placeholder="se calcula numéricamente">
+          </div>
+        </div>
+
+        <fieldset class="metodos">
+          <legend>Métodos a aplicar</legend>
+          <label class="toggle">
+            <input type="checkbox" name="metodo" value="biseccion" checked>
+            <span>Bisección</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" name="metodo" value="regula" checked>
+            <span>Regula falsi</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" name="metodo" value="newton" checked>
+            <span>Newton-Raphson</span>
+          </label>
+        </fieldset>
+
+        <button id="resolver" class="primary" type="button">Resolver</button>
+        <div id="mensajes" class="mensajes" role="status" aria-live="polite"></div>
+      </section>
+
+      <!-- 3. Resultados -->
+      <section id="resultados" class="resultados" hidden aria-labelledby="t-resultados">
+        <h2 id="t-resultados" class="sr-only">Resultados</h2>
+
+        <div id="resumen" class="resumen"></div>
+
+        <div class="card">
+          <div class="tabs" role="tablist" aria-label="Iteraciones por método" id="tabs"></div>
+          <div id="tabla-detalle" class="tabla-wrap" role="tabpanel" tabindex="0"></div>
+          <p class="hint" id="nota-detalle"></p>
+        </div>
+
+        <div class="card">
+          <h3 id="t-grafica">Gráfica</h3>
+          <div class="chart-wrap">
+            <canvas id="grafica" aria-label="Gráfica de la función con la raíz encontrada" role="img"></canvas>
+          </div>
+          <p class="hint">La línea vertical discontinua marca la raíz hallada. Desliza la tabla para ver todas las columnas.</p>
+        </div>
+
+        <div class="acciones">
+          <button id="exportar" class="secondary" type="button">Descargar iteraciones (CSV)</button>
+        </div>
+      </section>
     </section>
 
-    <!-- 2. Datos -->
-    <section class="card" aria-labelledby="t-datos">
-      <h2 id="t-datos"><span class="step">2</span> Los datos</h2>
+    <!-- ==================================================== SISTEMAS ==== -->
+    <section id="vista-sistemas" class="vista" role="tabpanel" aria-labelledby="tab-sistemas" hidden>
+      <!-- 1. Sistema -->
+      <section class="card" aria-labelledby="t-sistema">
+        <h2 id="t-sistema"><span class="step">1</span> El sistema lineal</h2>
 
-      <div class="grid">
         <div class="field">
-          <label for="a">Extremo a</label>
-          <input id="a" name="a" type="text" inputmode="decimal" value="2" autocomplete="off">
+          <label for="sis-matriz">Matriz A <span class="optional">(una fila por línea)</span></label>
+          <textarea id="sis-matriz" name="sis-matriz" rows="4" spellcheck="false"
+                    aria-describedby="sis-sintaxis">4 -1 0 0
+-1 4 -1 0
+0 -1 4 -1
+0 0 -1 4</textarea>
         </div>
-        <div class="field">
-          <label for="b">Extremo b</label>
-          <input id="b" name="b" type="text" inputmode="decimal" value="3" autocomplete="off">
+        <p id="sis-sintaxis" class="hint">
+          Separa los valores con espacios o comas y las filas con saltos de línea o <code>;</code>.
+          También puedes pegar la matriz aumentada con <code>|</code>:
+          <code>4 -1 0 0 | 1</code>. En ese caso se ignora el campo de <code>b</code>.
+        </p>
+
+        <div class="grid sistema">
+          <div class="field">
+            <label for="sis-b">Vector b</label>
+            <input id="sis-b" name="sis-b" type="text" inputmode="text" autocomplete="off"
+                   value="1 1 1 1" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="sis-x0">Vector inicial X⁽⁰⁾</label>
+            <input id="sis-x0" name="sis-x0" type="text" inputmode="text" autocomplete="off"
+                   value="0 0 0 0" spellcheck="false">
+          </div>
         </div>
-        <div class="field">
-          <label for="x0">Valor inicial x₀</label>
-          <input id="x0" name="x0" type="text" inputmode="decimal" value="2.5" autocomplete="off">
+
+        <div class="chips" role="group" aria-label="Ejemplos de sistemas">
+          <button type="button" class="chip" data-sistema="tridiagonal">Tridiagonal 4×4</button>
+          <button type="button" class="chip" data-sistema="orden3">Orden 3</button>
+          <button type="button" class="chip" data-sistema="noedd">No E.D.D.</button>
+          <button type="button" class="chip" data-sistema="reordenar">Reordenar</button>
+          <button type="button" class="chip" data-sistema="g4">G4–G5 · 6, 7, 8</button>
         </div>
-        <div class="field">
-          <label for="tol">Tolerancia</label>
-          <input id="tol" name="tol" type="text" inputmode="decimal" value="1e-8" autocomplete="off">
+      </section>
+
+      <!-- 2. Datos -->
+      <section class="card" aria-labelledby="t-datos-sistema">
+        <h2 id="t-datos-sistema"><span class="step">2</span> Los datos</h2>
+
+        <div class="grid sistema">
+          <div class="field">
+            <label for="sis-tol">Tolerancia ε</label>
+            <input id="sis-tol" name="sis-tol" type="text" inputmode="decimal" value="0.1" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="sis-maxiter">Máx. iteraciones</label>
+            <input id="sis-maxiter" name="sis-maxiter" type="number" min="1" max="500" step="1" value="100">
+          </div>
+          <div class="field">
+            <label for="sis-criterio">Criterio de detención</label>
+            <select id="sis-criterio" name="sis-criterio">
+              <option value="paso" selected>Paso ‖X⁽ᵏ⁾ − X⁽ᵏ⁻¹⁾‖ &lt; ε</option>
+              <option value="residual">Residual ‖A·X⁽ᵏ⁾ − b‖ &lt; ε</option>
+              <option value="relativo">Relativo ‖ΔX‖ / ‖X⁽ᵏ⁾‖ &lt; ε</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sis-norma">Norma</label>
+            <select id="sis-norma" name="sis-norma">
+              <option value="inf" selected>∞ · máximo</option>
+              <option value="1">1 · suma</option>
+              <option value="2">2 · euclidiana</option>
+            </select>
+          </div>
         </div>
-        <div class="field">
-          <label for="maxiter">Máx. iteraciones</label>
-          <input id="maxiter" name="maxiter" type="number" min="1" max="500" step="1" value="100">
+
+        <fieldset class="metodos">
+          <legend>Métodos a aplicar</legend>
+          <label class="toggle">
+            <input type="checkbox" name="metodo-sis" value="jacobi" checked>
+            <span>Jacobi</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" name="metodo-sis" value="gaussSeidel" checked>
+            <span>Gauss-Seidel</span>
+          </label>
+        </fieldset>
+
+        <button id="sis-resolver" class="primary" type="button">Resolver sistema</button>
+        <div id="sis-mensajes" class="mensajes" role="status" aria-live="polite"></div>
+      </section>
+
+      <!-- 3. Resultados -->
+      <section id="sis-resultados" class="resultados" hidden aria-labelledby="t-sis-resultados">
+        <h2 id="t-sis-resultados" class="sr-only">Resultados del sistema</h2>
+
+        <div id="sis-resumen" class="resumen"></div>
+
+        <div class="card">
+          <h3 id="t-diagnostico">Diagnóstico del sistema</h3>
+          <div id="sis-diagnostico"></div>
         </div>
-        <div class="field">
-          <label for="derivada">f′(x) <span class="optional">(opcional)</span></label>
-          <input id="derivada" name="derivada" type="text" inputmode="text" autocomplete="off"
-                 spellcheck="false" placeholder="se calcula numéricamente">
+
+        <div class="card">
+          <div class="tabs" role="tablist" aria-label="Iteraciones por método" id="sis-tabs"></div>
+          <div id="sis-tabla-detalle" class="tabla-wrap" role="tabpanel" tabindex="0"></div>
+          <p class="hint" id="sis-nota-detalle"></p>
         </div>
-      </div>
 
-      <fieldset class="metodos">
-        <legend>Métodos a aplicar</legend>
-        <label class="toggle">
-          <input type="checkbox" name="metodo" value="biseccion" checked>
-          <span>Bisección</span>
-        </label>
-        <label class="toggle">
-          <input type="checkbox" name="metodo" value="regula" checked>
-          <span>Regula falsi</span>
-        </label>
-        <label class="toggle">
-          <input type="checkbox" name="metodo" value="newton" checked>
-          <span>Newton-Raphson</span>
-        </label>
-      </fieldset>
-
-      <button id="resolver" class="primary" type="button">Resolver</button>
-      <div id="mensajes" class="mensajes" role="status" aria-live="polite"></div>
-    </section>
-
-    <!-- 3. Resultados -->
-    <section id="resultados" class="resultados" hidden aria-labelledby="t-resultados">
-      <h2 id="t-resultados" class="sr-only">Resultados</h2>
-
-      <div id="resumen" class="resumen"></div>
-
-      <div class="card">
-        <div class="tabs" role="tablist" aria-label="Iteraciones por método" id="tabs"></div>
-        <div id="tabla-detalle" class="tabla-wrap" role="tabpanel" tabindex="0"></div>
-        <p class="hint" id="nota-detalle"></p>
-      </div>
-
-      <div class="card">
-        <h3 id="t-grafica">Gráfica</h3>
-        <div class="chart-wrap">
-          <canvas id="grafica" aria-label="Gráfica de la función con la raíz encontrada" role="img"></canvas>
+        <div class="card">
+          <h3 id="t-convergencia">Convergencia</h3>
+          <div class="chart-wrap">
+            <canvas id="sis-grafica" aria-label="Residual de cada método en escala logarítmica" role="img"></canvas>
+          </div>
+          <p class="hint">
+            Residual ‖A·X⁽ᵏ⁾ − b‖ en escala logarítmica. Una recta que baja indica convergencia;
+            si sube o se estanca, el método no está reduciendo el error.
+          </p>
         </div>
-        <p class="hint">La línea vertical discontinua marca la raíz hallada. Desliza la tabla para ver todas las columnas.</p>
-      </div>
 
-      <div class="acciones">
-        <button id="exportar" class="secondary" type="button">Descargar iteraciones (CSV)</button>
-      </div>
+        <div class="acciones">
+          <button id="sis-exportar" class="secondary" type="button">Descargar iteraciones (CSV)</button>
+        </div>
+      </section>
     </section>
   </main>
 
