@@ -432,9 +432,11 @@ function leerParametros() {
   if (params.has("y0")) $("#edo-y0").value = params.get("y0");
   if (params.has("h")) $("#edo-h").value = params.get("h");
   if (params.has("N")) $("#edo-n").value = params.get("N");
-  if (params.has("exacta")) $("#edo-exacta").value = params.get("exacta");
-  if (params.has("ft")) $("#edo-ft").value = params.get("ft");
-  if (params.has("fy")) $("#edo-fy").value = params.get("fy");
+  // Si la URL trae otra f(t,y), no conservar la solución exacta del ejemplo
+  // anterior: se deja vacía para que el resolvedor automático intente.
+  $("#edo-exacta").value = params.has("exacta") ? params.get("exacta") : "";
+  $("#edo-ft").value = params.has("ft") ? params.get("ft") : "";
+  $("#edo-fy").value = params.has("fy") ? params.get("fy") : "";
   return { run: params.get("run") === "1" };
 }
 
@@ -463,6 +465,13 @@ export function initEdos() {
   $$(".chip[data-edo-ejemplo]").forEach((boton) => {
     boton.addEventListener("click", () => aplicarEjemplo(boton.dataset.edoEjemplo));
   });
+  // Al cambiar f, t0 o y0, una solución exacta anterior puede dejar de ser
+  // válida; se limpia para no mostrar una comparación equivocada.
+  for (const id of ["edo-funcion", "edo-t0", "edo-y0"]) {
+    $(`#${id}`).addEventListener("input", () => {
+      $("#edo-exacta").value = "";
+    });
+  }
   $("#edo-resolver").addEventListener("click", resolver);
   $("#edo-exacta-btn").addEventListener("click", calcularExacta);
   $("#edo-exportar").addEventListener("click", exportarCSV);
