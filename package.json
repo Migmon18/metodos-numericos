@@ -1,14 +1,15 @@
 {
   "name": "metodos-numericos",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs && node test/integration.test.mjs",
+    "test": "node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs && node test/integration.test.mjs && node test/ode.test.mjs",
     "test:raices": "node test/core.test.mjs",
     "test:sistemas": "node test/linear.test.mjs",
     "test:interpolacion": "node test/interp.test.mjs",
     "test:integracion": "node test/integration.test.mjs",
+    "test:edo": "node test/ode.test.mjs",
     "serve": "python3 -m http.server 8099"
   }
 }

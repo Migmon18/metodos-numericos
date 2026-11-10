@@ -1,7 +1,7 @@
 {
-  "name": "Métodos Numéricos — Raíces, sistemas, interpolación e integración",
+  "name": "Métodos Numéricos — Raíces, sistemas, interpolación, integración y EDO",
   "short_name": "Métodos",
-  "description": "Resuelve ecuaciones, sistemas lineales, interpola con Lagrange y Newton e integra con trapecio y Simpson, con tablas y gráficas.",
+  "description": "Resuelve ecuaciones, sistemas, interpolación, integración y EDO con Euler, Taylor y RK4, con tablas y gráficas.",
   "lang": "es",
   "dir": "ltr",
   "start_url": "./index.html",
@@ -22,6 +22,10 @@
     {
       "name": "Integración",
       "url": "./index.html#integracion"
+    },
+    {
+      "name": "EDO",
+      "url": "./index.html#edo"
     }
   ],
   "display": "standalone",

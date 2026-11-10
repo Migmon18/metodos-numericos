@@ -77,14 +77,18 @@ function tokenize(src) {
 }
 
 /**
- * Compila una expresión a una función f(x).
+ * Compila una expresión a una función.
+ * Por defecto la variable es x; también se pueden indicar varias variables,
+ * por ejemplo ["t", "y"] para una EDO.
  * @param {string} src
- * @returns {(x: number) => number}
+ * @param {string[]} [variables]
+ * @returns {(...valores: number[]) => number}
  */
-export function parseExpression(src) {
+export function parseExpression(src, variables = ["x"]) {
   const text = String(src ?? "").trim();
   if (!text) throw new ParseError("La expresión está vacía");
 
+  const nombres = Array.isArray(variables) && variables.length ? variables : ["x"];
   const tokens = tokenize(text);
   let pos = 0;
 
@@ -152,7 +156,8 @@ export function parseExpression(src) {
     if (t.kind === "num") return { type: "num", value: t.value };
 
     if (t.kind === "id") {
-      if (t.value === "x") return { type: "var" };
+      const indiceVariable = nombres.indexOf(t.value);
+      if (indiceVariable >= 0) return { type: "var", index: indiceVariable };
       if (t.value in CONSTS) return { type: "num", value: CONSTS[t.value] };
       if (t.value in FUNCS) {
         expect("(");
@@ -176,8 +181,9 @@ export function parseExpression(src) {
   if (pos !== tokens.length) throw new ParseError("Sobran símbolos al final de la expresión");
 
   const evaluate = compile(ast);
-  const f = (x) => evaluate(x);
+  const f = (...valores) => evaluate(valores);
   f.source = text;
+  f.variables = [...nombres];
   return f;
 }
 
@@ -188,25 +194,25 @@ function compile(node) {
       return () => v;
     }
     case "var":
-      return (x) => x;
+      return (args) => args[node.index];
     case "neg": {
       const inner = compile(node.operand);
-      return (x) => -inner(x);
+      return (args) => -inner(args);
     }
     case "call": {
       const fn = FUNCS[node.name];
       const arg = compile(node.arg);
-      return (x) => fn(arg(x));
+      return (args) => fn(arg(args));
     }
     case "bin": {
       const l = compile(node.left);
       const r = compile(node.right);
       switch (node.op) {
-        case "+": return (x) => l(x) + r(x);
-        case "-": return (x) => l(x) - r(x);
-        case "*": return (x) => l(x) * r(x);
-        case "/": return (x) => l(x) / r(x);
-        case "^": return (x) => Math.pow(l(x), r(x));
+        case "+": return (args) => l(args) + r(args);
+        case "-": return (args) => l(args) - r(args);
+        case "*": return (args) => l(args) * r(args);
+        case "/": return (args) => l(args) / r(args);
+        case "^": return (args) => Math.pow(l(args), r(args));
         default: throw new ParseError(`Operador desconocido: ${node.op}`);
       }
     }

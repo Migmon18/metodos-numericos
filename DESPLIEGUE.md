@@ -18,8 +18,9 @@ queda bien delimitado a ese ámbito.
 En este repositorio, **la raíz es la aplicación**, con `index.html` en la raíz.
 
 Contiene: `index.html`, `styles.css`, `app.js`, `raices.js`, `sistemas.js`,
-`interpolacion.js`, `integracion.js`, `core.js`, `linear.js`, `interp.js`,
-`integration.js`, `manifest.webmanifest`, `sw.js`, `assets/` (iconos),
+`interpolacion.js`, `integracion.js`, `edos.js`, `core.js`, `linear.js`,
+`interp.js`, `integration.js`, `ode.js`, `manifest.webmanifest`, `sw.js`,
+`assets/` (iconos),
 `_headers`, `.nojekyll`. No necesita compilación, ni Node, ni backend.
 
 ---
@@ -90,7 +91,7 @@ Jekyll.
 ## Actualizar la app más adelante
 
 Sube de nuevo la carpeta. Al cambiar `sw.js`, la versión de caché
-(`VERSION = "metodos-vN"`, actualmente `metodos-v10`) debe incrementarse para que
+(`VERSION = "metodos-vN"`, actualmente `metodos-v11`) debe incrementarse para que
 los alumnos reciban la nueva versión en lugar de la guardada.
 
 ## Enlaces directos a cada módulo

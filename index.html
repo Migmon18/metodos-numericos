@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Métodos Numéricos · Raíces, sistemas, interpolación e integración</title>
-  <meta name="description" content="Resuelve ecuaciones, sistemas lineales, interpola con Lagrange y Newton e integra con trapecio y Simpson, con tablas y gráficas.">
+  <title>Métodos Numéricos · Raíces, sistemas, interpolación, integración y EDO</title>
+  <meta name="description" content="Resuelve ecuaciones, sistemas, interpolación, integración y EDO con Euler, Taylor y RK4, con tablas y gráficas.">
   <meta name="theme-color" content="#004EAA">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
@@ -20,7 +20,7 @@
              alt="Universidad Tecnológica Metropolitana del Estado de Chile">
       </picture>
       <h1>Métodos Numéricos</h1>
-      <p class="subtitle">Raíces, sistemas, interpolación e integración</p>
+      <p class="subtitle">Raíces, sistemas, interpolación, integración y EDO</p>
 
       <nav class="modos" role="tablist" aria-label="Módulos">
         <button type="button" class="modo" role="tab" id="tab-raices"
@@ -38,6 +38,10 @@
         <button type="button" class="modo" role="tab" id="tab-integracion"
                 data-vista="integracion" aria-selected="false" aria-controls="vista-integracion">
           Integración
+        </button>
+        <button type="button" class="modo" role="tab" id="tab-edo"
+                data-vista="edo" aria-selected="false" aria-controls="vista-edo">
+          EDO
         </button>
       </nav>
     </div>
@@ -422,6 +426,101 @@
 
         <div class="acciones">
           <button id="int-exportar" class="secondary" type="button">Descargar resultados (CSV)</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ========================================================= EDO ==== -->
+    <section id="vista-edo" class="vista" role="tabpanel" aria-labelledby="tab-edo" hidden>
+      <section class="card" aria-labelledby="t-edo-problema">
+        <h2 id="t-edo-problema"><span class="step">1</span> El problema de valor inicial</h2>
+
+        <div class="field">
+          <label for="edo-funcion">y' = f(t,y) =</label>
+          <input id="edo-funcion" name="edo-funcion" type="text" inputmode="text" autocomplete="off"
+                 spellcheck="false" value="2*t*y" aria-describedby="edo-sintaxis">
+        </div>
+        <p id="edo-sintaxis" class="hint">
+          Variables <code>t</code> e <code>y</code>; misma sintaxis de expresiones
+          (<code>sin</code>, <code>exp</code>, <code>^</code>, etc.).
+        </p>
+
+        <div class="grid sistema">
+          <div class="field">
+            <label for="edo-t0">t₀</label>
+            <input id="edo-t0" type="text" inputmode="decimal" value="0" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="edo-y0">y(t₀) = y₀</label>
+            <input id="edo-y0" type="text" inputmode="decimal" value="1" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="edo-h">Paso h</label>
+            <input id="edo-h" type="text" inputmode="decimal" value="0.1" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="edo-n">Número de pasos N</label>
+            <input id="edo-n" type="number" min="1" max="2000" step="1" value="4">
+          </div>
+        </div>
+
+        <div class="grid sistema">
+          <div class="field">
+            <label for="edo-exacta">Solución exacta y(t) <span class="optional">(opcional)</span></label>
+            <input id="edo-exacta" type="text" inputmode="text" autocomplete="off"
+                   spellcheck="false" value="exp(t^2)" placeholder="para calcular el error">
+          </div>
+          <div class="field">
+            <label for="edo-ft">∂f/∂t <span class="optional">(opcional)</span></label>
+            <input id="edo-ft" type="text" inputmode="text" autocomplete="off"
+                   spellcheck="false" placeholder="Taylor la aproxima si está vacía">
+          </div>
+          <div class="field">
+            <label for="edo-fy">∂f/∂y <span class="optional">(opcional)</span></label>
+            <input id="edo-fy" type="text" inputmode="text" autocomplete="off"
+                   spellcheck="false" placeholder="Taylor la aproxima si está vacía">
+          </div>
+        </div>
+
+        <div class="chips" role="group" aria-label="Ejemplos de EDO">
+          <button type="button" class="chip" data-edo-ejemplo="cuadratica">y' = 2ty</button>
+          <button type="button" class="chip" data-edo-ejemplo="lineal">y' = t + y</button>
+          <button type="button" class="chip" data-edo-ejemplo="riccati">y' = y − t² + 1</button>
+        </div>
+
+        <p class="hint metodos-fijos">
+          Se aplican Euler, Euler modificado, Taylor de 3 términos y Runge-Kutta 4.
+        </p>
+
+        <button id="edo-resolver" class="primary" type="button">Resolver EDO</button>
+        <div id="edo-mensajes" class="mensajes" role="status" aria-live="polite"></div>
+      </section>
+
+      <section id="edo-resultados" class="resultados" hidden aria-labelledby="t-edo-resultados">
+        <h2 id="t-edo-resultados" class="sr-only">Resultados de EDO</h2>
+
+        <div id="edo-resumen" class="resumen"></div>
+
+        <div class="card">
+          <h3>Gráfica</h3>
+          <div class="chart-wrap">
+            <canvas id="edo-grafica" aria-label="Curvas numéricas y solución exacta de la EDO" role="img"></canvas>
+          </div>
+          <p class="hint">
+            Cada curva corresponde a un método; si escribiste la solución exacta,
+            se dibuja con línea de puntos para comparar.
+          </p>
+        </div>
+
+        <div class="card">
+          <details class="matrices">
+            <summary>Tabla de valores por paso</summary>
+            <div id="edo-tabla" class="tabla-wrap"></div>
+          </details>
+        </div>
+
+        <div class="acciones">
+          <button id="edo-exportar" class="secondary" type="button">Descargar resultados (CSV)</button>
         </div>
       </section>
     </section>

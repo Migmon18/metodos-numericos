@@ -1,6 +1,6 @@
-# Métodos Numéricos — raíces, sistemas, interpolación e integración
+# Métodos Numéricos — raíces, sistemas, interpolación, integración y EDO
 
-Aplicación web instalable (PWA) para clase. Reúne cuatro módulos:
+Aplicación web instalable (PWA) para clase. Reúne cinco módulos:
 
 - **Raíces de ecuaciones**: bisección, regula falsi y Newton-Raphson.
 - **Sistemas lineales**: métodos iterativos de Jacobi y Gauss-Seidel, siguiendo
@@ -9,6 +9,8 @@ Aplicación web instalable (PWA) para clase. Reúne cuatro módulos:
   divididas y gráfica de los puntos y del polinomio interpolante.
 - **Integración**: reglas del trapecio, Simpson 1/3 y Simpson 3/8, con tabla de
   nodos, pesos, errores y gráfica del área bajo la curva.
+- **EDO**: Euler, Euler modificado, Taylor de tres términos y Runge-Kutta de
+  orden 4, con tabla por paso y comparación gráfica.
 
 En todos los casos el alumnado ve el procedimiento completo y una gráfica, no
 solo el resultado.
@@ -67,6 +69,18 @@ solo el resultado.
 - **Tabla de nodos** con \(x_k\), \(f(x_k)\) y los pesos de cada regla.
 - **Errores absolutos** si se ingresa el valor exacto de la integral.
 - **Gráfica** de la función, el área sombreada y los nodos de la partición.
+- **Exportación a CSV**.
+
+### Ecuaciones diferenciales ordinarias
+
+- **Euler, Euler modificado, Taylor de 3 términos y RK4** con la misma
+  condición inicial y el mismo paso.
+- **f(t,y), t₀, y₀, h y N editables**, con ejemplos precargados.
+- **Solución exacta opcional** para calcular errores absolutos.
+- **Derivadas parciales opcionales** para Taylor; si se dejan vacías, se
+  aproximan numéricamente.
+- **Tabla por paso** con la solución exacta y los cuatro métodos.
+- **Gráfica comparativa** de las curvas numéricas y la solución exacta.
 - **Exportación a CSV**.
 
 ## Cómo abrirla
@@ -152,6 +166,18 @@ index.html?int=sin(x)^2&a=0&b=1.0471975512&N=6&exacta=0.3070924247&run=1
 - `run=1` integra automáticamente al cargar.
 - `#integracion` abre directamente el módulo.
 
+### EDO
+
+```
+index.html#edo
+index.html?edo=2*t*y&t0=0&y0=1&h=0.1&N=4&exacta=exp(t^2)&run=1
+```
+
+- `edo` es f(t,y); `t0`, `y0`, `h` y `N` definen la partición.
+- `exacta`, `ft` y `fy` son opcionales.
+- `run=1` resuelve automáticamente al cargar.
+- `#edo` abre directamente el módulo.
+
 ## Identidad institucional
 
 La cabecera lleva el identificador gráfico de la **Universidad Tecnológica
@@ -173,17 +199,19 @@ Los archivos son `assets/utem-color.png` y `assets/utem-blanco.png`.
 ## Estructura
 
 ```
-index.html               interfaz de los cuatro módulos
+index.html               interfaz de los cinco módulos
 styles.css               estilos (claro y oscuro, móvil primero)
 app.js                   arranque y navegación entre módulos
 raices.js                interfaz del módulo de raíces
 sistemas.js              interfaz del módulo de sistemas lineales
 interpolacion.js         interfaz del módulo de interpolación
 integracion.js           interfaz del módulo de integración
+edos.js                  interfaz del módulo de EDO
 core.js                  analizador y métodos de raíces (sin DOM, testeable)
 linear.js                Jacobi, Gauss-Seidel, E.D.D. y radio espectral (sin DOM)
 interp.js                Lagrange, Newton y diferencias divididas (sin DOM)
 integration.js           trapecio, Simpson 1/3 y 3/8 (sin DOM)
+ode.js                   Euler, Taylor y RK4 (sin DOM)
 manifest.webmanifest     metadatos de la app instalable
 sw.js                    service worker (caché sin conexión)
 assets/                  iconos y logos institucionales
@@ -191,6 +219,7 @@ test/core.test.mjs       pruebas del módulo de raíces
 test/linear.test.mjs     pruebas del módulo de sistemas
 test/interp.test.mjs     pruebas del módulo de interpolación
 test/integration.test.mjs pruebas del módulo de integración
+test/ode.test.mjs       pruebas del módulo de EDO
 _headers                 cabeceras para Netlify/Cloudflare (sw.js sin caché)
 .nojekyll                evita el procesado de Jekyll en GitHub Pages
 DESPLIEGUE.md            cómo publicarla con HTTPS
@@ -209,10 +238,10 @@ DESPLIEGUE.md            cómo publicarla con HTTPS
 ```bash
 npm test
 # equivale a:
-node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs && node test/integration.test.mjs
+node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs && node test/integration.test.mjs && node test/ode.test.mjs
 ```
 
-Son **119 comprobaciones**:
+Son **135 comprobaciones**:
 
 - 28 del módulo de raíces (√2, 2.0945514815, 0.7390851332, precedencia de
   operadores, errores de sintaxis…).
@@ -223,6 +252,8 @@ Son **119 comprobaciones**:
   Newton, evaluación, gráfica y formato de coeficientes.
 - 21 del módulo de integración: nodos, trapecio, Simpson 1/3 y 3/8, condiciones
   de N, comparación con valores exactos y gráfica.
+- 16 del módulo de EDO: Euler, Euler modificado, Taylor, RK4, parser de dos
+  variables, condición inicial y errores.
 
 ## Añadir otro método
 
