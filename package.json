@@ -1,12 +1,13 @@
 {
   "name": "metodos-numericos",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node test/core.test.mjs && node test/linear.test.mjs",
+    "test": "node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs",
     "test:raices": "node test/core.test.mjs",
     "test:sistemas": "node test/linear.test.mjs",
+    "test:interpolacion": "node test/interp.test.mjs",
     "serve": "python3 -m http.server 8099"
   }
 }

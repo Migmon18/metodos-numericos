@@ -1,6 +1,6 @@
 /* sw.js — service worker: guarda la aplicación para que funcione sin conexión. */
 
-const VERSION = "metodos-v8";
+const VERSION = "metodos-v9";
 const RECURSOS = [
   "./",
   "./index.html",
@@ -8,8 +8,10 @@ const RECURSOS = [
   "./app.js",
   "./raices.js",
   "./sistemas.js",
+  "./interpolacion.js",
   "./core.js",
   "./linear.js",
+  "./interp.js",
   "./manifest.webmanifest",
   "./assets/icon.svg",
   "./assets/icon-192.png",

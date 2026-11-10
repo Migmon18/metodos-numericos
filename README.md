@@ -1,12 +1,14 @@
-# Métodos Numéricos — raíces y sistemas lineales
+# Métodos Numéricos — raíces, sistemas e interpolación
 
-Aplicación web instalable (PWA) para clase. Reúne dos módulos:
+Aplicación web instalable (PWA) para clase. Reúne tres módulos:
 
 - **Raíces de ecuaciones**: bisección, regula falsi y Newton-Raphson.
 - **Sistemas lineales**: métodos iterativos de Jacobi y Gauss-Seidel, siguiendo
   el apunte *Resolución de sistemas de ecuaciones lineales*.
+- **Interpolación**: polinomios de Lagrange y de Newton, con tabla de diferencias
+  divididas y gráfica de los puntos y del polinomio interpolante.
 
-En ambos casos el alumnado ve la tabla de iteraciones completa y una gráfica, no
+En todos los casos el alumnado ve el procedimiento completo y una gráfica, no
 solo el resultado.
 
 - **Repositorio:** <https://github.com/Migmon18/metodos-numericos>
@@ -42,6 +44,16 @@ solo el resultado.
   ambos métodos.
 - **Entrada cómoda**: una fila por línea, valores separados por espacios o comas,
   o directamente la matriz aumentada `A | b`.
+- **Exportación a CSV**.
+
+### Interpolación
+
+- **Lagrange y Newton** calculados simultáneamente con los mismos puntos.
+- **Tabla editable de puntos** `(x_i, f_i)`, con añadir/quitar filas y ejemplos.
+- **Polinomio expandido** con coeficientes en forma decimal o fraccionaria.
+- **Tabla de diferencias divididas** de Newton y coeficientes de ambos métodos.
+- **Gráfica** con los puntos de interpolación, el polinomio interpolante y una
+  línea vertical en el valor evaluado.
 - **Exportación a CSV**.
 
 ## Cómo abrirla
@@ -103,6 +115,18 @@ index.html?A=4,-1,0,0;-1,4,-1,0;0,-1,4,-1;0,0,-1,4&b=1,1,1,1&x0=0,0,0,0&tol=0.1&
   `m` métodos (`jacobi`, `gaussSeidel`) y `run=1`.
 - `#sistemas` abre directamente el módulo de sistemas.
 
+### Interpolación
+
+```
+index.html#interpolacion
+index.html?puntos=0,-3;1,0;3,5;6,7&x=1.8&run=1
+```
+
+- `puntos` contiene pares `x,f(x)` separados por `;`.
+- `x` es el valor donde se evalúa el polinomio.
+- `run=1` interpola automáticamente al cargar.
+- `#interpolacion` abre directamente el módulo.
+
 ## Identidad institucional
 
 La cabecera lleva el identificador gráfico de la **Universidad Tecnológica
@@ -124,18 +148,21 @@ Los archivos son `assets/utem-color.png` y `assets/utem-blanco.png`.
 ## Estructura
 
 ```
-index.html               interfaz de los dos módulos
+index.html               interfaz de los tres módulos
 styles.css               estilos (claro y oscuro, móvil primero)
 app.js                   arranque y navegación entre módulos
 raices.js                interfaz del módulo de raíces
 sistemas.js              interfaz del módulo de sistemas lineales
+interpolacion.js         interfaz del módulo de interpolación
 core.js                  analizador y métodos de raíces (sin DOM, testeable)
 linear.js                Jacobi, Gauss-Seidel, E.D.D. y radio espectral (sin DOM)
+interp.js                Lagrange, Newton y diferencias divididas (sin DOM)
 manifest.webmanifest     metadatos de la app instalable
 sw.js                    service worker (caché sin conexión)
 assets/                  iconos y logos institucionales
 test/core.test.mjs       pruebas del módulo de raíces
 test/linear.test.mjs     pruebas del módulo de sistemas
+test/interp.test.mjs     pruebas del módulo de interpolación
 _headers                 cabeceras para Netlify/Cloudflare (sw.js sin caché)
 .nojekyll                evita el procesado de Jekyll en GitHub Pages
 DESPLIEGUE.md            cómo publicarla con HTTPS
@@ -154,16 +181,18 @@ DESPLIEGUE.md            cómo publicarla con HTTPS
 ```bash
 npm test
 # equivale a:
-node test/core.test.mjs && node test/linear.test.mjs
+node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs
 ```
 
-Son **75 comprobaciones**:
+Son **98 comprobaciones**:
 
 - 28 del módulo de raíces (√2, 2.0945514815, 0.7390851332, precedencia de
   operadores, errores de sintaxis…).
 - 47 del módulo de sistemas: lectura de matrices, normas, E.D.D. y
   reordenamiento, todos los ejemplos y ejercicios del apunte (J1–J5, G1–G5),
   criterios de detención, matrices de iteración y radio espectral.
+- 23 del módulo de interpolación: puntos, Lagrange, diferencias divididas de
+  Newton, evaluación, gráfica y formato de coeficientes.
 
 ## Añadir otro método
 

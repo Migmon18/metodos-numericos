@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Métodos Numéricos · Raíces y sistemas lineales</title>
-  <meta name="description" content="Resuelve ecuaciones no lineales por bisección, regula falsi y Newton-Raphson, y sistemas lineales por Jacobi y Gauss-Seidel, con tablas de iteraciones y gráficas.">
+  <title>Métodos Numéricos · Raíces, sistemas e interpolación</title>
+  <meta name="description" content="Resuelve ecuaciones no lineales, sistemas lineales por Jacobi y Gauss-Seidel, e interpola datos con Lagrange y Newton, con tablas y gráficas.">
   <meta name="theme-color" content="#004EAA">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
@@ -20,7 +20,7 @@
              alt="Universidad Tecnológica Metropolitana del Estado de Chile">
       </picture>
       <h1>Métodos Numéricos</h1>
-      <p class="subtitle">Raíces de ecuaciones y sistemas lineales</p>
+      <p class="subtitle">Raíces, sistemas lineales e interpolación</p>
 
       <nav class="modos" role="tablist" aria-label="Módulos">
         <button type="button" class="modo" role="tab" id="tab-raices"
@@ -30,6 +30,10 @@
         <button type="button" class="modo" role="tab" id="tab-sistemas"
                 data-vista="sistemas" aria-selected="false" aria-controls="vista-sistemas">
           Sistemas lineales
+        </button>
+        <button type="button" class="modo" role="tab" id="tab-interpolacion"
+                data-vista="interpolacion" aria-selected="false" aria-controls="vista-interpolacion">
+          Interpolación
         </button>
       </nav>
     </div>
@@ -259,6 +263,82 @@
 
         <div class="acciones">
           <button id="sis-exportar" class="secondary" type="button">Descargar iteraciones (CSV)</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ================================================== INTERPOLACIÓN ==== -->
+    <section id="vista-interpolacion" class="vista" role="tabpanel" aria-labelledby="tab-interpolacion" hidden>
+      <section class="card" aria-labelledby="t-interp-puntos">
+        <h2 id="t-interp-puntos"><span class="step">1</span> Los puntos</h2>
+        <p class="hint">
+          Escribe al menos dos puntos con abscisas distintas. La app ordena los
+          puntos por <code>x</code> antes de interpolar.
+        </p>
+
+        <div class="tabla-puntos-wrap">
+          <div class="tabla-puntos-head" aria-hidden="true">
+            <span>#</span><span>x<sub>i</sub></span><span>f(x<sub>i</sub>)</span><span></span>
+          </div>
+          <div id="interp-puntos" class="tabla-puntos"></div>
+        </div>
+
+        <div class="acciones-puntos">
+          <button id="interp-agregar" class="secondary" type="button">Añadir punto</button>
+          <div class="chips" role="group" aria-label="Ejemplos de interpolación">
+            <button type="button" class="chip" data-interp-ejemplo="apunte">Apunte · 4 puntos</button>
+            <button type="button" class="chip" data-interp-ejemplo="parabola">Parábola · 3 puntos</button>
+            <button type="button" class="chip" data-interp-ejemplo="cubica">Cúbica · 4 puntos</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="t-interp-evaluacion">
+        <h2 id="t-interp-evaluacion"><span class="step">2</span> La evaluación</h2>
+        <div class="grid sistema">
+          <div class="field">
+            <label for="interp-x">Valor de x a evaluar</label>
+            <input id="interp-x" name="interp-x" type="text" inputmode="decimal" value="1.8" autocomplete="off">
+          </div>
+          <div class="field">
+            <label>Métodos</label>
+            <p class="hint metodos-fijos">Lagrange y Newton · se calculan ambos</p>
+          </div>
+        </div>
+
+        <button id="interp-resolver" class="primary" type="button">Interpolar</button>
+        <div id="interp-mensajes" class="mensajes" role="status" aria-live="polite"></div>
+      </section>
+
+      <section id="interp-resultados" class="resultados" hidden aria-labelledby="t-interp-resultados">
+        <h2 id="t-interp-resultados" class="sr-only">Resultados de interpolación</h2>
+
+        <div id="interp-resumen" class="resumen"></div>
+
+        <div class="card">
+          <h3>Gráfica</h3>
+          <div class="chart-wrap">
+            <canvas id="interp-grafica" aria-label="Puntos de interpolación y polinomio interpolante" role="img"></canvas>
+          </div>
+          <p class="hint">
+            Los puntos azules son los datos; la curva verde es el polinomio
+            interpolante y la línea naranja marca el valor evaluado.
+          </p>
+        </div>
+
+        <div class="card">
+          <details class="matrices">
+            <summary>Tabla de diferencias divididas (Newton)</summary>
+            <div id="interp-tabla-diferencias" class="tabla-wrap"></div>
+          </details>
+          <details class="matrices">
+            <summary>Coeficientes del polinomio</summary>
+            <div id="interp-tabla-coeficientes" class="tabla-wrap"></div>
+          </details>
+        </div>
+
+        <div class="acciones">
+          <button id="interp-exportar" class="secondary" type="button">Descargar resultados (CSV)</button>
         </div>
       </section>
     </section>

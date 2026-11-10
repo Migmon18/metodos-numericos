@@ -543,6 +543,76 @@ table.matriz td {
 .leyenda span { display: inline-flex; align-items: center; gap: 6px; }
 .leyenda i { width: 18px; height: 3px; border-radius: 2px; display: inline-block; }
 
+/* ------------------------------------------------------- interpolación */
+
+.tabla-puntos-wrap {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tabla-puntos-head,
+.punto-fila {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr) minmax(0, 1fr) 2.3rem;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+}
+
+.tabla-puntos-head {
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.punto-fila { border-top: 1px solid var(--line); }
+.punto-fila .indice { color: var(--muted); font-size: 0.8rem; text-align: center; }
+.punto-fila input {
+  min-height: 38px;
+  padding: 7px 9px;
+  font-size: 15px;
+}
+.punto-quitar {
+  font: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  padding: 7px;
+  cursor: pointer;
+}
+.punto-quitar:hover { background: var(--err-soft); color: var(--err); }
+.punto-quitar:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.acciones-puntos {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+.acciones-puntos .chips { margin: 0; }
+
+.metodos-fijos {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.metodo-card .polinomio {
+  grid-column: 1 / -1;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: clamp(0.82rem, 3.2vw, 0.95rem);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
 /* -------------------------------------------------------------------- pie */
 
 .app-footer {

@@ -1,7 +1,7 @@
 {
-  "name": "Métodos Numéricos — Raíces y sistemas lineales",
+  "name": "Métodos Numéricos — Raíces, sistemas e interpolación",
   "short_name": "Métodos",
-  "description": "Resuelve ecuaciones no lineales por bisección, regula falsi y Newton-Raphson, y sistemas lineales por Jacobi y Gauss-Seidel, con tablas de iteraciones y gráficas.",
+  "description": "Resuelve ecuaciones no lineales, sistemas lineales por Jacobi y Gauss-Seidel, e interpola datos con Lagrange y Newton, con tablas y gráficas.",
   "lang": "es",
   "dir": "ltr",
   "start_url": "./index.html",
@@ -14,6 +14,10 @@
     {
       "name": "Sistemas lineales",
       "url": "./index.html#sistemas"
+    },
+    {
+      "name": "Interpolación",
+      "url": "./index.html#interpolacion"
     }
   ],
   "display": "standalone",

@@ -3,24 +3,29 @@
  */
 import { initRaices } from "./raices.js";
 import { initSistemas } from "./sistemas.js";
+import { initInterpolacion } from "./interpolacion.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
 const raices = initRaices();
 const sistemas = initSistemas();
+const interpolacion = initInterpolacion();
 
 const paneles = {
   raices: $("#vista-raices"),
   sistemas: $("#vista-sistemas"),
+  interpolacion: $("#vista-interpolacion"),
 };
 
 const botones = $$(".modo");
 
 function vistaPedida() {
   if (location.hash === "#sistemas") return "sistemas";
+  if (location.hash === "#interpolacion") return "interpolacion";
   if (location.hash === "#raices") return "raices";
   const params = new URLSearchParams(location.search);
+  if (params.get("modo") === "interpolacion" || params.has("puntos")) return "interpolacion";
   if (params.get("modo") === "sistemas" || params.has("sistema") || params.has("A")) return "sistemas";
   return "raices";
 }
@@ -40,8 +45,9 @@ function mostrar(vista, { actualizarUrl = true } = {}) {
     history.replaceState(null, "", `${base}#${activa}`);
   }
 
+  const modulos = { raices, sistemas, interpolacion };
   requestAnimationFrame(() => {
-    (activa === "raices" ? raices : sistemas).redibujar();
+    modulos[activa].redibujar();
   });
 }
 
