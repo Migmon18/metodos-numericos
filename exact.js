@@ -193,6 +193,12 @@ function num(value, digits = 10) {
   return sign + String(Number(abs.toPrecision(digits)));
 }
 
+function textoConstante(c) {
+  if (Math.abs(c - Math.E) < 1e-10) return "e";
+  if (Math.abs(c + Math.E) < 1e-10) return "-e";
+  return num(c);
+}
+
 function formatPoly(p, variable = "t") {
   const q = trim(p);
   const pieces = [];
@@ -432,12 +438,123 @@ function proporcionA(b, a) {
   return c;
 }
 
+
+/* ------------------------------------------------ coeficientes con polo 1/t */
+
+function poleCoefficient(node) {
+  if (node.type === "neg") {
+    const k = poleCoefficient(node.operand);
+    return k === null ? null : -k;
+  }
+  if (node.type === "bin" && node.op === "/") {
+    const num = poly(node.left);
+    const den = node.right;
+    if (num && num.length === 1 && den.type === "var" && den.index === 0) {
+      return num[0];
+    }
+  }
+  return null;
+}
+
+/** Detecta f = (k/t) y + b(t). */
+function splitPoleLinear(ast) {
+  const terminos = [];
+  addTerms(ast, 1, terminos);
+  let k = null;
+  let bAst = null;
+  for (const { node, sign } of terminos) {
+    if (containsY(node)) {
+      if (node.type !== "bin" || node.op !== "*") return null;
+      const fs = factors(node);
+      const yIndex = fs.findIndex((f) => f.type === "var" && f.index === 1);
+      if (yIndex < 0 || fs.filter((f) => f.type === "var" && f.index === 1).length !== 1) return null;
+      let pole = null;
+      let constante = sign;
+      for (let i = 0; i < fs.length; i++) {
+        if (i === yIndex) continue;
+        const p = poly(fs[i]);
+        if (p) {
+          if (p.length !== 1) return null;
+          constante *= p[0];
+        } else {
+          const q = poleCoefficient(fs[i]);
+          if (q === null || pole !== null) return null;
+          pole = q;
+        }
+      }
+      if (pole === null) return null;
+      if (k === null) k = pole;
+      else if (Math.abs(k - pole) > 1e-12) return null;
+      k *= 1; // el signo ya está en la constante, no en el polo
+    } else {
+      const conSigno = sign < 0 ? { type: "neg", operand: node } : node;
+      bAst = bAst ? { type: "bin", op: "+", left: bAst, right: conSigno } : conSigno;
+    }
+  }
+  return k === null ? null : { k, bAst };
+}
+
+/** Quita un factor t^k de b(t); devuelve el resto. */
+function quitarTk(ast, k) {
+  const terminos = [];
+  addTerms(ast, 1, terminos);
+  let resto = null;
+  for (const { node, sign } of terminos) {
+    if (node.type !== "bin" || node.op !== "*") return null;
+    const fs = factors(node);
+    const idx = fs.findIndex((f) => {
+      const p = poly(f);
+      if (!p) return false;
+      const grado = p.length - 1;
+      if (grado !== k) return false;
+      for (let i = 0; i < p.length; i++) {
+        if (i === k && Math.abs(p[i] - 1) > 1e-12) return false;
+        if (i !== k && Math.abs(p[i]) > 1e-12) return false;
+      }
+      return true;
+    });
+    if (idx < 0) return null;
+    let factor = null;
+    for (let i = 0; i < fs.length; i++) {
+      if (i === idx) continue;
+      factor = factor ? { type: "bin", op: "*", left: factor, right: fs[i] } : fs[i];
+    }
+    if (!factor) factor = { type: "num", value: 1 };
+    const conSigno = sign < 0 ? { type: "neg", operand: factor } : factor;
+    resto = resto ? { type: "bin", op: "+", left: resto, right: conSigno } : conSigno;
+  }
+  return resto;
+}
+
+function resolverPolo(k, bAst, t0, y0) {
+  if (Math.abs(t0) < 1e-14) return null;
+  if (bAst === null) return null;
+  const resto = quitarTk(bAst, k);
+  if (!resto) return null;
+  const partes = partesForzamiento(resto);
+  if (!partes) return null;
+  const G = integrarPartes(partes);
+  if (!G) return null;
+  const Gtexto = textoPartes(G);
+  const C = y0 * Math.pow(t0, -k) - evaluarPartes(G, t0);
+  let dentro = Gtexto;
+  if (Math.abs(C) > 1e-12) {
+    if (!dentro || dentro === "0") dentro = textoConstante(C);
+    else dentro = C < 0 ? `${dentro} - ${textoConstante(-C).replace(/^-/, "")}` : `${dentro} + ${textoConstante(C)}`;
+  }
+  const potencia = Math.abs(k - 1) < 1e-12 ? "t" : `t^${num(k)}`;
+  if (!dentro || dentro === "0") return "0";
+  return `${potencia}*(${dentro})`;
+}
+
 /* --------------------------------------------------------------- solver */
 
 /** Indica si f(t,y) tiene la forma lineal a(t)y+b(t). */
 export function isLinearODE(fText) {
-  try { return !!splitLinear(parseAST(fText, ["t", "y"])); }
-  catch { return false; }
+  try {
+    const ast = parseAST(fText, ["t", "y"]);
+    return !!splitLinear(ast) || !!splitPoleLinear(ast);
+  } catch { return false; }
 }
 
 /** Devuelve la expresión y(t) o null si no reconoce una forma cerrada. */
@@ -446,6 +563,12 @@ export function solveExact(fText, t0, y0) {
   let ast;
   try { ast = parseAST(fText, ["t", "y"]); }
   catch (error) { if (error instanceof ParseError) return null; throw error; }
+
+  const pole = splitPoleLinear(ast);
+  if (pole) {
+    const sol = resolverPolo(pole.k, pole.bAst, t0, y0);
+    if (sol) return sol;
+  }
 
   const partes = splitLinear(ast);
   if (!partes) return null;

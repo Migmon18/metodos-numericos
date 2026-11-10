@@ -111,6 +111,17 @@ check("y'=sin(t) se integra término a término", () => {
   assert.ok(expr);
   close(parseExpression(expr, ["t"])(0.4), 2 - Math.cos(0.4), 1e-10);
 });
+check("lineal con coeficiente k/t y b=t^k e^t", () => {
+  const expr = solveExact("2/t*y+t^2*exp(t)", 1, 0);
+  assert.equal(expr, "t^2*(exp(t) - e)");
+  close(parseExpression(expr, ["t"])(1), 0, 1e-12);
+  close(parseExpression(expr, ["t"])(0.4), 0.16 * (Math.exp(0.4) - Math.E), 1e-10);
+});
+check("la solución k/t respeta otra condición inicial", () => {
+  const expr = solveExact("2/t*y+t^2*exp(t)", 1, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(1), 1, 1e-8);
+});
 check("no inventa solución para formas no lineales", () =>
   assert.equal(solveExact("y^2+t", 0, 1), null));
 
