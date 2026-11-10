@@ -76,7 +76,10 @@ solo el resultado.
 - **Euler, Euler modificado, Taylor de 3 términos y RK4** con la misma
   condición inicial y el mismo paso.
 - **f(t,y), t₀, y₀, h y N editables**, con ejemplos precargados.
-- **Solución exacta opcional** para calcular errores absolutos.
+- **Solución exacta opcional o automática** para calcular errores; la app
+  reconoce formas lineales y polinomiales comunes.
+- **Gráfica comparativa solo con solución exacta**; sin ella se muestran las
+  tarjetas y la tabla numérica, pero no la comparación gráfica.
 - **Derivadas parciales opcionales** para Taylor; si se dejan vacías, se
   aproximan numéricamente.
 - **Tabla por paso** con la solución exacta y los cuatro métodos.
@@ -241,7 +244,7 @@ npm test
 node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs && node test/integration.test.mjs && node test/ode.test.mjs
 ```
 
-Son **135 comprobaciones**:
+Son **140 comprobaciones**:
 
 - 28 del módulo de raíces (√2, 2.0945514815, 0.7390851332, precedencia de
   operadores, errores de sintaxis…).
@@ -252,8 +255,8 @@ Son **135 comprobaciones**:
   Newton, evaluación, gráfica y formato de coeficientes.
 - 21 del módulo de integración: nodos, trapecio, Simpson 1/3 y 3/8, condiciones
   de N, comparación con valores exactos y gráfica.
-- 16 del módulo de EDO: Euler, Euler modificado, Taylor, RK4, parser de dos
-  variables, condición inicial y errores.
+- 21 del módulo de EDO: Euler, Euler modificado, Taylor, RK4, parser de dos
+  variables, condición inicial, errores y solución exacta automática.
 
 ## Añadir otro método
 

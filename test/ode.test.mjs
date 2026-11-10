@@ -5,6 +5,7 @@
 import assert from "node:assert/strict";
 import { euler, eulerModified, taylor3, rk4, solveODE, sampleFunction, OdeError } from "../ode.js";
 import { parseExpression } from "../core.js";
+import { solveExact } from "../exact.js";
 
 let passed = 0;
 let failed = 0;
@@ -66,6 +67,31 @@ check("el orden de error es RK4 < Euler modificado < Euler", () => {
   const eR = Math.abs(todo.rk4.value - EXACTA);
   assert.ok(eR < eM && eM < eE);
 });
+
+console.log("\nSolución exacta automática");
+check("y'=2ty → exp(t^2)", () => {
+  const expr = solveExact("2*t*y", 0, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4), EXACTA, 1e-10);
+});
+check("y'=t+y → 2e^t - t - 1", () => {
+  const expr = solveExact("t+y", 0, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4), 2 * Math.exp(0.4) - 0.4 - 1, 1e-10);
+});
+check("y'=y-t^2+1 → (t+1)^2 - 0.5e^t", () => {
+  const expr = solveExact("y-t^2+1", 0, 0.5);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4), 1.96 - 0.5 * Math.exp(0.4), 1e-10);
+  assert.ok(!expr.includes("+ -"));
+});
+check("y'=t^2 → t^3/3 + 1", () => {
+  const expr = solveExact("t^2", 0, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4), 0.4 ** 3 / 3 + 1, 1e-10);
+});
+check("no inventa solución para formas no lineales", () =>
+  assert.equal(solveExact("y^2+t", 0, 1), null));
 
 console.log("\nParser y muestreo");
 check("parsea f(t,y)", () => {

@@ -4,6 +4,7 @@
  */
 import { parseExpression, ParseError, formatNumber } from "./core.js";
 import { solveODE, sampleFunction, OdeError } from "./ode.js";
+import { solveExact } from "./exact.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -39,10 +40,10 @@ function num(texto) {
   return Number(limpio);
 }
 
-function avisar(texto) {
+function avisar(texto, tipo = "error") {
   const caja = $("#edo-mensajes");
   caja.textContent = texto;
-  caja.className = "mensajes";
+  caja.className = `mensajes ${tipo === "info" ? "info" : ""}`;
 }
 
 function limpiarAvisos() {
@@ -73,7 +74,16 @@ function leerDatos() {
   if (!Number.isFinite(h) || h <= 0) throw new Error("El paso h debe ser positivo.");
   if (!Number.isInteger(N) || N < 1) throw new Error("N debe ser un entero al menos 1.");
 
-  const exactaTexto = $("#edo-exacta").value.trim();
+  let exactaTexto = $("#edo-exacta").value.trim();
+  let autoExacta = false;
+  if (exactaTexto === "") {
+    const sugerida = solveExact($("#edo-funcion").value, t0, y0);
+    if (sugerida) {
+      exactaTexto = sugerida;
+      $("#edo-exacta").value = sugerida;
+      autoExacta = true;
+    }
+  }
   const exacta = exactaTexto === "" ? null : compilar(exactaTexto, ["t"], "Solución exacta");
   const ftTexto = $("#edo-ft").value.trim();
   const fyTexto = $("#edo-fy").value.trim();
@@ -94,7 +104,7 @@ function leerDatos() {
     return Number.isFinite(valor) ? valor : null;
   });
 
-  return { f, exacta, ft, fy, resultado, exactos, N, h };
+  return { f, exacta, ft, fy, resultado, exactos, N, h, autoExacta };
 }
 
 function resolver() {
@@ -113,7 +123,12 @@ function resolver() {
   pintarTabla(datos);
   $("#edo-exportar").disabled = false;
   $("#edo-resultados").hidden = false;
-  requestAnimationFrame(() => dibujarGrafica(datos));
+  $("#edo-grafica-card").hidden = !datos.exacta;
+  $("#edo-nota-grafica").hidden = !!datos.exacta;
+  if (datos.exacta) requestAnimationFrame(() => dibujarGrafica(datos));
+  if (datos.autoExacta) {
+    avisar(`Solución exacta detectada automáticamente: y(t) = ${datos.exacta.source}.`, "info");
+  }
   $("#edo-resultados").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -211,6 +226,7 @@ function marcas({ desde, hasta, paso }) {
 }
 
 function dibujarGrafica(datos) {
+  if (!datos.exacta) return;
   const canvas = $("#edo-grafica");
   if (!canvas) return;
   const contexto = canvas.getContext("2d");
@@ -422,11 +438,33 @@ function leerParametros() {
   return { run: params.get("run") === "1" };
 }
 
+function calcularExacta() {
+  limpiarAvisos();
+  try {
+    const t0 = num($("#edo-t0").value);
+    const y0 = num($("#edo-y0").value);
+    if (!Number.isFinite(t0) || !Number.isFinite(y0)) {
+      throw new Error("t₀ y y₀ deben ser números.");
+    }
+    const expresion = solveExact($("#edo-funcion").value, t0, y0);
+    if (!expresion) {
+      avisar("No se reconoce una solución analítica automática para esta f(t,y). " +
+        "Escríbela manualmente o usa los métodos numéricos.");
+      return;
+    }
+    $("#edo-exacta").value = expresion;
+    avisar(`Solución exacta: y(t) = ${expresion}. Pulsa Resolver EDO para graficar.`, "info");
+  } catch (error) {
+    avisar(error.message);
+  }
+}
+
 export function initEdos() {
   $$(".chip[data-edo-ejemplo]").forEach((boton) => {
     boton.addEventListener("click", () => aplicarEjemplo(boton.dataset.edoEjemplo));
   });
   $("#edo-resolver").addEventListener("click", resolver);
+  $("#edo-exacta-btn").addEventListener("click", calcularExacta);
   $("#edo-exportar").addEventListener("click", exportarCSV);
   document.addEventListener("keydown", (evento) => {
     if (evento.key !== "Enter" || !evento.target.matches("input")) return;
@@ -440,7 +478,7 @@ export function initEdos() {
     if ($("#edo-resultados").hidden) return;
     clearTimeout(temporizador);
     temporizador = setTimeout(() => {
-      if (state.datos) dibujarGrafica(state.datos);
+      if (state.datos?.exacta) dibujarGrafica(state.datos);
     }, 150);
   });
 

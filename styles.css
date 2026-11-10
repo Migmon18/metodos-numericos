@@ -612,6 +612,14 @@ table.matriz td {
   overflow-wrap: anywhere;
 }
 
+.input-con-boton {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.input-con-boton input { flex: 1; min-width: 0; }
+.boton-mini { font-size: 0.78rem; padding: 0 12px; white-space: nowrap; }
+
 .metodo-card .valor {
   grid-column: 1 / -1;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;

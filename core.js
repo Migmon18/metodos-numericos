@@ -77,14 +77,13 @@ function tokenize(src) {
 }
 
 /**
- * Compila una expresión a una función.
- * Por defecto la variable es x; también se pueden indicar varias variables,
- * por ejemplo ["t", "y"] para una EDO.
+ * Convierte una expresión en su árbol sintáctico.
+ * Por defecto la variable es x; también se pueden indicar varias variables.
  * @param {string} src
  * @param {string[]} [variables]
- * @returns {(...valores: number[]) => number}
+ * @returns {object}
  */
-export function parseExpression(src, variables = ["x"]) {
+export function parseAST(src, variables = ["x"]) {
   const text = String(src ?? "").trim();
   if (!text) throw new ParseError("La expresión está vacía");
 
@@ -179,7 +178,20 @@ export function parseExpression(src, variables = ["x"]) {
 
   const ast = parseExpr();
   if (pos !== tokens.length) throw new ParseError("Sobran símbolos al final de la expresión");
+  return ast;
+}
 
+/**
+ * Compila una expresión a una función.
+ * @param {string} src
+ * @param {string[]} [variables]
+ * @returns {(...valores: number[]) => number}
+ */
+export function parseExpression(src, variables = ["x"]) {
+  const text = String(src ?? "").trim();
+  if (!text) throw new ParseError("La expresión está vacía");
+  const nombres = Array.isArray(variables) && variables.length ? variables : ["x"];
+  const ast = parseAST(text, nombres);
   const evaluate = compile(ast);
   const f = (...valores) => evaluate(valores);
   f.source = text;

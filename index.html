@@ -467,8 +467,12 @@
         <div class="grid sistema">
           <div class="field">
             <label for="edo-exacta">Solución exacta y(t) <span class="optional">(opcional)</span></label>
-            <input id="edo-exacta" type="text" inputmode="text" autocomplete="off"
-                   spellcheck="false" value="exp(t^2)" placeholder="para calcular el error">
+            <div class="input-con-boton">
+              <input id="edo-exacta" type="text" inputmode="text" autocomplete="off"
+                     spellcheck="false" value="exp(t^2)" placeholder="para calcular el error">
+              <button id="edo-exacta-btn" class="secondary mini" type="button">Calcular</button>
+            </div>
+            <p class="hint">Si se deja vacía, la app intenta obtenerla automáticamente.</p>
           </div>
           <div class="field">
             <label for="edo-ft">∂f/∂t <span class="optional">(opcional)</span></label>
@@ -501,7 +505,11 @@
 
         <div id="edo-resumen" class="resumen"></div>
 
-        <div class="card">
+        <p id="edo-nota-grafica" class="hint" hidden>
+          La gráfica comparativa se muestra solo cuando hay una solución exacta.
+        </p>
+
+        <div class="card" id="edo-grafica-card">
           <h3>Gráfica</h3>
           <div class="chart-wrap">
             <canvas id="edo-grafica" aria-label="Curvas numéricas y solución exacta de la EDO" role="img"></canvas>
