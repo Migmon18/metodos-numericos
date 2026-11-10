@@ -4,7 +4,7 @@
  */
 import { parseExpression, ParseError, formatNumber } from "./core.js";
 import { solveODE, sampleFunction, OdeError } from "./ode.js";
-import { solveExact } from "./exact.js";
+import { solveExact, isLinearODE } from "./exact.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -450,8 +450,12 @@ function calcularExacta() {
     }
     const expresion = solveExact($("#edo-funcion").value, t0, y0);
     if (!expresion) {
-      avisar("No se reconoce una solución analítica automática para esta f(t,y). " +
-        "Escríbela manualmente o usa los métodos numéricos.");
+      const lineal = isLinearODE($("#edo-funcion").value);
+      avisar(lineal
+        ? "La ecuación es lineal, pero la primitiva necesaria no es elemental o no está " +
+          "en las formas automáticas. Escribe la solución exacta manualmente."
+        : "No se reconoce una solución analítica automática para esta f(t,y). " +
+          "Escríbela manualmente o usa los métodos numéricos.");
       return;
     }
     $("#edo-exacta").value = expresion;

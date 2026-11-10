@@ -90,6 +90,27 @@ check("y'=t^2 → t^3/3 + 1", () => {
   assert.ok(expr);
   close(parseExpression(expr, ["t"])(0.4), 0.4 ** 3 / 3 + 1, 1e-10);
 });
+check("lineal con b(t) proporcional a a(t)", () => {
+  const expr = solveExact("t*y+t", 0, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4), -1 + 2 * Math.exp(0.08), 1e-10);
+});
+check("lineal con forzamiento exponencial y resonancia", () => {
+  const expr = solveExact("2*y+exp(t)", 0, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4), -Math.exp(0.4) + 2 * Math.exp(0.8), 1e-10);
+});
+check("lineal con forzamiento trigonométrico", () => {
+  const expr = solveExact("y+sin(t)", 0, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4),
+    1.5 * Math.exp(0.4) - 0.5 * (Math.sin(0.4) + Math.cos(0.4)), 1e-10);
+});
+check("y'=sin(t) se integra término a término", () => {
+  const expr = solveExact("sin(t)", 0, 1);
+  assert.ok(expr);
+  close(parseExpression(expr, ["t"])(0.4), 2 - Math.cos(0.4), 1e-10);
+});
 check("no inventa solución para formas no lineales", () =>
   assert.equal(solveExact("y^2+t", 0, 1), null));
 

@@ -91,7 +91,7 @@ Jekyll.
 ## Actualizar la app más adelante
 
 Sube de nuevo la carpeta. Al cambiar `sw.js`, la versión de caché
-(`VERSION = "metodos-vN"`, actualmente `metodos-v13`) debe incrementarse para que
+(`VERSION = "metodos-vN"`, actualmente `metodos-v14`) debe incrementarse para que
 los alumnos reciban la nueva versión en lugar de la guardada.
 
 ## Enlaces directos a cada módulo

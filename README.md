@@ -77,7 +77,8 @@ solo el resultado.
   condición inicial y el mismo paso.
 - **f(t,y), t₀, y₀, h y N editables**, con ejemplos precargados.
 - **Solución exacta opcional o automática** para calcular errores; la app
-  reconoce formas lineales y polinomiales comunes.
+  reconoce formas lineales con forzamientos polinomiales, exponenciales y
+  trigonométricos, además de casos proporcionales.
 - **Gráfica comparativa solo con solución exacta**; sin ella se muestran las
   tarjetas y la tabla numérica, pero no la comparación gráfica.
 - **Derivadas parciales opcionales** para Taylor; si se dejan vacías, se
@@ -244,7 +245,7 @@ npm test
 node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs && node test/integration.test.mjs && node test/ode.test.mjs
 ```
 
-Son **140 comprobaciones**:
+Son **144 comprobaciones**:
 
 - 28 del módulo de raíces (√2, 2.0945514815, 0.7390851332, precedencia de
   operadores, errores de sintaxis…).
@@ -255,8 +256,9 @@ Son **140 comprobaciones**:
   Newton, evaluación, gráfica y formato de coeficientes.
 - 21 del módulo de integración: nodos, trapecio, Simpson 1/3 y 3/8, condiciones
   de N, comparación con valores exactos y gráfica.
-- 21 del módulo de EDO: Euler, Euler modificado, Taylor, RK4, parser de dos
-  variables, condición inicial, errores y solución exacta automática.
+- 25 del módulo de EDO: Euler, Euler modificado, Taylor, RK4, parser de dos
+  variables, condición inicial, errores y solución exacta automática,
+  incluidos forzamientos exponenciales, trigonométricos y lineales proporcionales.
 
 ## Añadir otro método
 
