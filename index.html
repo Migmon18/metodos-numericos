@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Métodos Numéricos · Raíces, sistemas e interpolación</title>
-  <meta name="description" content="Resuelve ecuaciones no lineales, sistemas lineales por Jacobi y Gauss-Seidel, e interpola datos con Lagrange y Newton, con tablas y gráficas.">
+  <title>Métodos Numéricos · Raíces, sistemas, interpolación e integración</title>
+  <meta name="description" content="Resuelve ecuaciones, sistemas lineales, interpola con Lagrange y Newton e integra con trapecio y Simpson, con tablas y gráficas.">
   <meta name="theme-color" content="#004EAA">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
@@ -20,7 +20,7 @@
              alt="Universidad Tecnológica Metropolitana del Estado de Chile">
       </picture>
       <h1>Métodos Numéricos</h1>
-      <p class="subtitle">Raíces, sistemas lineales e interpolación</p>
+      <p class="subtitle">Raíces, sistemas, interpolación e integración</p>
 
       <nav class="modos" role="tablist" aria-label="Módulos">
         <button type="button" class="modo" role="tab" id="tab-raices"
@@ -34,6 +34,10 @@
         <button type="button" class="modo" role="tab" id="tab-interpolacion"
                 data-vista="interpolacion" aria-selected="false" aria-controls="vista-interpolacion">
           Interpolación
+        </button>
+        <button type="button" class="modo" role="tab" id="tab-integracion"
+                data-vista="integracion" aria-selected="false" aria-controls="vista-integracion">
+          Integración
         </button>
       </nav>
     </div>
@@ -339,6 +343,85 @@
 
         <div class="acciones">
           <button id="interp-exportar" class="secondary" type="button">Descargar resultados (CSV)</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ==================================================== INTEGRACIÓN ==== -->
+    <section id="vista-integracion" class="vista" role="tabpanel" aria-labelledby="tab-integracion" hidden>
+      <section class="card" aria-labelledby="t-integral">
+        <h2 id="t-integral"><span class="step">1</span> La integral</h2>
+
+        <div class="field">
+          <label for="int-funcion">f(x) =</label>
+          <input id="int-funcion" name="int-funcion" type="text" inputmode="text" autocomplete="off"
+                 spellcheck="false" value="sin(x)^2" aria-describedby="int-sintaxis">
+        </div>
+        <p id="int-sintaxis" class="hint">
+          Se admite la misma sintaxis que en raíces: <code>+ − * / ^</code>,
+          paréntesis, <code>x</code>, <code>pi</code> y funciones como
+          <code>sin</code>, <code>cos</code>, <code>exp</code>, <code>ln</code>.
+        </p>
+
+        <div class="grid sistema">
+          <div class="field">
+            <label for="int-a">Extremo a</label>
+            <input id="int-a" name="int-a" type="text" inputmode="decimal" value="0" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="int-b">Extremo b</label>
+            <input id="int-b" name="int-b" type="text" inputmode="decimal" value="1.0471975512" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="int-n">Subintervalos N</label>
+            <input id="int-n" name="int-n" type="number" min="1" max="1000" step="1" value="6">
+          </div>
+          <div class="field">
+            <label for="int-exacta">Valor exacto <span class="optional">(opcional)</span></label>
+            <input id="int-exacta" name="int-exacta" type="text" inputmode="decimal"
+                   value="0.3070924247" autocomplete="off" placeholder="para calcular el error">
+          </div>
+        </div>
+
+        <div class="chips" role="group" aria-label="Ejemplos de integración">
+          <button type="button" class="chip" data-int-ejemplo="sin2">sen² · 0 a π/3</button>
+          <button type="button" class="chip" data-int-ejemplo="exp">e⁻ˣ · 0 a 1</button>
+          <button type="button" class="chip" data-int-ejemplo="racional">1/(1+x) · 0 a 1</button>
+        </div>
+
+        <p class="hint metodos-fijos">
+          Se aplican las tres reglas: Trapecio, Simpson 1/3 y Simpson 3/8.
+        </p>
+
+        <button id="int-resolver" class="primary" type="button">Integrar</button>
+        <div id="int-mensajes" class="mensajes" role="status" aria-live="polite"></div>
+      </section>
+
+      <section id="int-resultados" class="resultados" hidden aria-labelledby="t-int-resultados">
+        <h2 id="t-int-resultados" class="sr-only">Resultados de integración</h2>
+
+        <div id="int-resumen" class="resumen"></div>
+
+        <div class="card">
+          <h3>Gráfica</h3>
+          <div class="chart-wrap">
+            <canvas id="int-grafica" aria-label="Función, área bajo la curva y nodos de integración" role="img"></canvas>
+          </div>
+          <p class="hint">
+            La curva es f(x), la zona sombreada es el área que aproxima la
+            integral y los puntos marcan los nodos x<sub>k</sub>.
+          </p>
+        </div>
+
+        <div class="card">
+          <details class="matrices">
+            <summary>Tabla de nodos y valores</summary>
+            <div id="int-tabla-nodos" class="tabla-wrap"></div>
+          </details>
+        </div>
+
+        <div class="acciones">
+          <button id="int-exportar" class="secondary" type="button">Descargar resultados (CSV)</button>
         </div>
       </section>
     </section>

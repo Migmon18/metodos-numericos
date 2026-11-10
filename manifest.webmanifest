@@ -1,7 +1,7 @@
 {
-  "name": "Métodos Numéricos — Raíces, sistemas e interpolación",
+  "name": "Métodos Numéricos — Raíces, sistemas, interpolación e integración",
   "short_name": "Métodos",
-  "description": "Resuelve ecuaciones no lineales, sistemas lineales por Jacobi y Gauss-Seidel, e interpola datos con Lagrange y Newton, con tablas y gráficas.",
+  "description": "Resuelve ecuaciones, sistemas lineales, interpola con Lagrange y Newton e integra con trapecio y Simpson, con tablas y gráficas.",
   "lang": "es",
   "dir": "ltr",
   "start_url": "./index.html",
@@ -18,6 +18,10 @@
     {
       "name": "Interpolación",
       "url": "./index.html#interpolacion"
+    },
+    {
+      "name": "Integración",
+      "url": "./index.html#integracion"
     }
   ],
   "display": "standalone",

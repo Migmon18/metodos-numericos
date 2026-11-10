@@ -99,11 +99,10 @@ h3 { font-size: 0.98rem; font-weight: 650; margin-bottom: 10px; }
 /* Selector de módulo: raíces de ecuaciones o sistemas lineales. */
 .modos {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin-top: 14px;
-  overflow-x: auto;
   padding-bottom: 2px;
-  scrollbar-width: thin;
 }
 .modo {
   font: inherit;
@@ -610,6 +609,15 @@ table.matriz td {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: clamp(0.82rem, 3.2vw, 0.95rem);
   line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.metodo-card .valor {
+  grid-column: 1 / -1;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: clamp(1rem, 4vw, 1.18rem);
+  font-weight: 650;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 

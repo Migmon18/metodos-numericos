@@ -1,12 +1,14 @@
-# Métodos Numéricos — raíces, sistemas e interpolación
+# Métodos Numéricos — raíces, sistemas, interpolación e integración
 
-Aplicación web instalable (PWA) para clase. Reúne tres módulos:
+Aplicación web instalable (PWA) para clase. Reúne cuatro módulos:
 
 - **Raíces de ecuaciones**: bisección, regula falsi y Newton-Raphson.
 - **Sistemas lineales**: métodos iterativos de Jacobi y Gauss-Seidel, siguiendo
   el apunte *Resolución de sistemas de ecuaciones lineales*.
 - **Interpolación**: polinomios de Lagrange y de Newton, con tabla de diferencias
   divididas y gráfica de los puntos y del polinomio interpolante.
+- **Integración**: reglas del trapecio, Simpson 1/3 y Simpson 3/8, con tabla de
+  nodos, pesos, errores y gráfica del área bajo la curva.
 
 En todos los casos el alumnado ve el procedimiento completo y una gráfica, no
 solo el resultado.
@@ -54,6 +56,17 @@ solo el resultado.
 - **Tabla de diferencias divididas** de Newton y coeficientes de ambos métodos.
 - **Gráfica** con los puntos de interpolación, el polinomio interpolante y una
   línea vertical en el valor evaluado.
+- **Exportación a CSV**.
+
+### Integración numérica
+
+- **Trapecio, Simpson 1/3 y Simpson 3/8** calculados con los mismos datos.
+- **Función, extremos y N editables**, con ejemplos precargados.
+- **Condiciones automáticas**: Simpson 1/3 exige N par y Simpson 3/8 exige
+  N múltiplo de 3; si no se cumplen, la tarjeta explica por qué.
+- **Tabla de nodos** con \(x_k\), \(f(x_k)\) y los pesos de cada regla.
+- **Errores absolutos** si se ingresa el valor exacto de la integral.
+- **Gráfica** de la función, el área sombreada y los nodos de la partición.
 - **Exportación a CSV**.
 
 ## Cómo abrirla
@@ -127,6 +140,18 @@ index.html?puntos=0,-3;1,0;3,5;6,7&x=1.8&run=1
 - `run=1` interpola automáticamente al cargar.
 - `#interpolacion` abre directamente el módulo.
 
+### Integración
+
+```
+index.html#integracion
+index.html?int=sin(x)^2&a=0&b=1.0471975512&N=6&exacta=0.3070924247&run=1
+```
+
+- `int` es la función, `a` y `b` los extremos, `N` el número de subintervalos y
+  `exacta` el valor exacto opcional.
+- `run=1` integra automáticamente al cargar.
+- `#integracion` abre directamente el módulo.
+
 ## Identidad institucional
 
 La cabecera lleva el identificador gráfico de la **Universidad Tecnológica
@@ -148,21 +173,24 @@ Los archivos son `assets/utem-color.png` y `assets/utem-blanco.png`.
 ## Estructura
 
 ```
-index.html               interfaz de los tres módulos
+index.html               interfaz de los cuatro módulos
 styles.css               estilos (claro y oscuro, móvil primero)
 app.js                   arranque y navegación entre módulos
 raices.js                interfaz del módulo de raíces
 sistemas.js              interfaz del módulo de sistemas lineales
 interpolacion.js         interfaz del módulo de interpolación
+integracion.js           interfaz del módulo de integración
 core.js                  analizador y métodos de raíces (sin DOM, testeable)
 linear.js                Jacobi, Gauss-Seidel, E.D.D. y radio espectral (sin DOM)
 interp.js                Lagrange, Newton y diferencias divididas (sin DOM)
+integration.js           trapecio, Simpson 1/3 y 3/8 (sin DOM)
 manifest.webmanifest     metadatos de la app instalable
 sw.js                    service worker (caché sin conexión)
 assets/                  iconos y logos institucionales
 test/core.test.mjs       pruebas del módulo de raíces
 test/linear.test.mjs     pruebas del módulo de sistemas
 test/interp.test.mjs     pruebas del módulo de interpolación
+test/integration.test.mjs pruebas del módulo de integración
 _headers                 cabeceras para Netlify/Cloudflare (sw.js sin caché)
 .nojekyll                evita el procesado de Jekyll en GitHub Pages
 DESPLIEGUE.md            cómo publicarla con HTTPS
@@ -181,10 +209,10 @@ DESPLIEGUE.md            cómo publicarla con HTTPS
 ```bash
 npm test
 # equivale a:
-node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs
+node test/core.test.mjs && node test/linear.test.mjs && node test/interp.test.mjs && node test/integration.test.mjs
 ```
 
-Son **98 comprobaciones**:
+Son **119 comprobaciones**:
 
 - 28 del módulo de raíces (√2, 2.0945514815, 0.7390851332, precedencia de
   operadores, errores de sintaxis…).
@@ -193,6 +221,8 @@ Son **98 comprobaciones**:
   criterios de detención, matrices de iteración y radio espectral.
 - 23 del módulo de interpolación: puntos, Lagrange, diferencias divididas de
   Newton, evaluación, gráfica y formato de coeficientes.
+- 21 del módulo de integración: nodos, trapecio, Simpson 1/3 y 3/8, condiciones
+  de N, comparación con valores exactos y gráfica.
 
 ## Añadir otro método
 
